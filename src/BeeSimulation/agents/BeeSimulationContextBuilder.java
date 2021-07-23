@@ -18,19 +18,20 @@ public class BeeSimulationContextBuilder implements ContextBuilder<Object> {
 	public Context<Object> build(Context<Object> context) {
 		context.setId("BeeSimulation");
 
-		final Parameters p = RunEnvironment.getInstance().getParameters();
-		final var seed = (Integer) p.getValue("randomSeed");
-		final var random = new Random(seed);
+		Parameters p = RunEnvironment.getInstance().getParameters();
+		var seed = (Integer) p.getValue("randomSeed");
+		var random = new Random(seed);
 
-		final var startX = 0;
-		final var startY = 0;
+		var startX = 0;
+		var startY = 0;
 
-		final GridFactory gridFactory = GridFactoryFinder.createGridFactory(null);
-		final Grid<Object> grid = gridFactory.createGrid("Grid", context,
+		GridFactory gridFactory = GridFactoryFinder.createGridFactory(null);
+		Grid<Object> grid = gridFactory.createGrid("Grid", context,
 				new GridBuilderParameters<Object>(new StickyBorders(), new SimpleGridAdder<Object>(), true, 50, 50));
 
-		final Hive hive = new Hive(startX, startY);
+		Hive hive = new Hive(startX, startY);
 		context.add(hive);
+		grid.moveTo(hive, startX, startY);
 
 		for (int i = 0; i < 15; i++) {
 			final var bee = new Bee(grid, random);

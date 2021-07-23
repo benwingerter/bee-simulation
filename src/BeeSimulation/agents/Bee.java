@@ -56,9 +56,9 @@ public class Bee {
 	 */
 	private void move() {
 
-		final var location = grid.getLocation(this);
-		final var x = location.getX();
-		final var y = location.getY();
+		var location = grid.getLocation(this);
+		var x = location.getX();
+		var y = location.getY();
 
 		switch (this.state) {
 		case RETURN_TO_HIVE:
@@ -123,7 +123,7 @@ public class Bee {
 	 * @return the flower if exists
 	 */
 	private static Optional<Flower> getFlower(Grid<Object> grid, int x, int y) {
-		final var objs = grid.getObjects();
+		var objs = grid.getObjects();
 		for (Object obj : objs) {
 			if (obj instanceof Flower && ((Flower) obj).getX() == x && ((Flower) obj).getY() == y) {
 				return Optional.of((Flower) obj);
@@ -141,7 +141,7 @@ public class Bee {
 	 * @return the hive if exists
 	 */
 	private static Optional<Hive> getHive(Grid<Object> grid, int x, int y) {
-		final var objs = grid.getObjects();
+		var objs = grid.getObjects();
 		for (Object obj : objs) {
 			if (obj instanceof Hive && ((Hive) obj).getX() == x && ((Hive) obj).getY() == y) {
 				return Optional.of((Hive) obj);

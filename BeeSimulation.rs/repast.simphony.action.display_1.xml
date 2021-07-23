@@ -7,6 +7,10 @@
       <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
     <entry>
+      <string>BeeSimulation.agents.Hive</string>
+      <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
+    </entry>
+    <entry>
       <string>BeeSimulation.agents.Bee</string>
       <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
@@ -14,11 +18,15 @@
   <editedStyles>
     <entry>
       <string>BeeSimulation.agents.Flower</string>
-      <string>BeeSimulation.agents.Flower.style_6.xml</string>
+      <string>BeeSimulation.agents.Flower.style_0.xml</string>
+    </entry>
+    <entry>
+      <string>BeeSimulation.agents.Hive</string>
+      <string>BeeSimulation.agents.Hive.style_0.xml</string>
     </entry>
     <entry>
       <string>BeeSimulation.agents.Bee</string>
-      <string>BeeSimulation.agents.Bee.style_11.xml</string>
+      <string>BeeSimulation.agents.Bee.style_0.xml</string>
     </entry>
   </editedStyles>
   <netStyles/>
@@ -31,7 +39,7 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>342841039</hashCode>
+    <hashCode>-641685063</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>Grid</layoutProjection>
@@ -40,6 +48,10 @@
     <entry>
       <string>BeeSimulation.agents.Flower</string>
       <int>0</int>
+    </entry>
+    <entry>
+      <string>BeeSimulation.agents.Hive</string>
+      <int>2</int>
     </entry>
     <entry>
       <string>BeeSimulation.agents.Bee</string>
