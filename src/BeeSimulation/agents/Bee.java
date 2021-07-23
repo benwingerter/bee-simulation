@@ -47,10 +47,6 @@ public class Bee {
 		}
 	}
 
-	private void allNectarCollected() {
-		// TODO implement
-	}
-
 	/**
 	 * Move the bee to a random empty adjacent site.
 	 */
@@ -107,7 +103,6 @@ public class Bee {
 					nectar += flower.grabNectar();
 					moveTowardsHive(x, y);
 				}
-				// TODO check if all honey is gone
 			}
 			break;
 		}
