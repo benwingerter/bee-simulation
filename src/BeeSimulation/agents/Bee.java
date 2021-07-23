@@ -66,7 +66,7 @@ public class Bee {
 			// Check if the cell is the hive
 			if (x == hiveX && y == hiveY) {
 				state = State.DEPOSIT_NECTAR;
-				final var optHive = getHive(grid, x, y);
+				var optHive = getHive(grid, x, y);
 				if (optHive.isPresent()) {
 					final var hive = optHive.get();
 					hive.deposit(nectar);
