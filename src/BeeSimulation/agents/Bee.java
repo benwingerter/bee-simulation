@@ -1,24 +1,41 @@
 package BeeSimulation.agents;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.logging.Logger;
+import BeeSimulation.lib.BeeLogger;
+import BeeSimulation.lib.Coordinate;
+import BeeSimulation.lib.FlowerLocation;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.space.grid.*;
+import repast.simphony.engine.environment.RunEnvironment;
 
 public class Bee {
 
-	final private Grid<Object> grid;
-	final private Random random;
+	private final static Logger LOGGER = BeeLogger.getLogger();
+	private final int id;
+	private final Grid<Object> grid;
+	private final Random random;
+	private final int wanderThreshold = 10;
+	private final int wagglePersistence = 3;
+	private final int jumpPersistence = 10;
+	private FlowerLocation knownFlower;
+	private State state = State.WANDER;
 	private int hiveX;
 	private int hiveY;
+	private Optional<Coordinate> jumpTo = Optional.empty();
 	private int nectar;
-	private State state = State.WANDER;
+	private int waggleCount;
+	private int wanderCount;
+	private int jumpCount;
 
 	private static enum State {
-		WANDER, RETURN_TO_HIVE, DEPOSIT_NECTAR
+		WANDER, RETURN_TO_HIVE, DEPOSIT_NECTAR, AT_HIVE, WAGGLE, EXPLOIT, JUMP
 	}
 
-	public Bee(Grid<Object> grid, Random random) {
+	public Bee(Grid<Object> grid, Random random, int id) {
+		this.id = id;
 		this.grid = grid;
 		this.random = random;
 		hiveX = 0;
@@ -27,53 +44,130 @@ public class Bee {
 
 	@ScheduledMethod(start = 1, interval = 1, shuffle = true)
 	public void step() {
-		move();
+		switch (state) {
+		case AT_HIVE:
+			atHive();
+			break;
+		case DEPOSIT_NECTAR:
+			state = State.AT_HIVE;
+			break;
+		case RETURN_TO_HIVE:
+			moveTowardsHive();
+			break;
+		case JUMP:
+			jump();
+		case WANDER:
+			wander();
+			break;
+		case EXPLOIT:
+			exploit();
+			break;
+		default:
+			break;
+		}
 	}
 
-	private void moveTowardsHive(int currX, int currY) {
-		if (hiveX - currX > 0) {
-			// Move Up
-			grid.moveByDisplacement(this, 1, 0);
-		} else {
-			// Move down
-			grid.moveByDisplacement(this, -1, 0);
-		}
-		if (hiveY - currY > 0) {
-			// Move right
-			grid.moveByDisplacement(this, 0, 1);
-		} else {
-			// Move left
-			grid.moveByDisplacement(this, 0, -1);
+	private void exploit() {
+		var arrived = moveTowards(knownFlower.getX(), knownFlower.getY());
+		if (arrived) {
+			handleAtFlower();
 		}
 	}
 
-	/**
-	 * Move the bee to a random empty adjacent site.
-	 */
-	private void move() {
+	private void atHive() {
+		getHive(grid, hiveX, hiveY).ifPresent(hive -> {
+			if (knownFlower != null) {
+				// Waggle
+				if (waggleCount < wagglePersistence) {
+					if (waggleCount == 0) {
+						hive.joinWagglers(this);
+					}
+					waggleCount++;
+				} else {
+					hive.leaveWagglers(this);
+					this.state = State.EXPLOIT;
+				}
+			} else {
+				// Observe the best dance
+				var wagglers = hive.getWagglers();
+				if (wagglers.size() == 0) {
+					this.state = State.WANDER;
+				} else {
+					this.knownFlower = bestWaggle(wagglers);
+					this.state = State.EXPLOIT;
+				}
+			}
+		});
+	}
+
+	private void jump() {
+		jumpCount++;
 
 		var location = grid.getLocation(this);
 		var x = location.getX();
 		var y = location.getY();
 
-		switch (this.state) {
-		case RETURN_TO_HIVE:
-			moveTowardsHive(x, y);
-			// Check if the cell is the hive
-			if (x == hiveX && y == hiveY) {
-				state = State.DEPOSIT_NECTAR;
-				var optHive = getHive(grid, x, y);
-				if (optHive.isPresent()) {
-					final var hive = optHive.get();
-					hive.deposit(nectar);
-					nectar = 0;
-				}
-			}
-			break;
-		case DEPOSIT_NECTAR:
+		// Save a new jump to location if necessary
+		if (jumpTo.isEmpty()) {
+			var moved = false;
+			do {
+				// this needs to be saved.
+				this.jumpTo = Optional.of(jumpPosition(x, y));
+
+			} while (!moved);
+		}
+
+		var moveTo = jumpTo.get();
+
+		// Move towards there
+		// No need to check for out-of-grid
+		var diffX = moveTo.getX() - x;
+		if (diffX > 0) {
+			grid.moveByDisplacement(this, 1, 0);
+		} else if (diffX < 0) {
+			grid.moveByDisplacement(this, -1, 0);
+		}
+
+		var diffY = moveTo.getY() - y;
+		if (diffY > 0) {
+			grid.moveByDisplacement(this, 0, 1);
+		} else if (diffX < 0) {
+			grid.moveByDisplacement(this, 0, -1);
+		}
+		// Stop jumping if not moved
+		var newLocation = grid.getLocation(this);
+		var newX = newLocation.getX();
+		var newY = newLocation.getY();
+
+		// End jumping if the edge was reached or persistence is exceeded
+		if ((jumpCount == jumpPersistence) || (newX == x && newY == y)) {
 			state = State.WANDER;
-			break;
-		case WANDER:
+			jumpCount = 0;
+		}
+
+		handleAtFlower();
+
+	}
+
+	private static Coordinate jumpPosition(int x, int y) {
+		// Move 10 steps in random direction
+		// Find a random angle
+
+		var slopeRad = Math.atan(Math.random() * 2 * Math.PI);
+		var newX = (int) (x + Math.cos(slopeRad) * 10);
+		var newY = (int) (x + Math.sin(slopeRad) * 10);
+
+		return new Coordinate(newX, newY);
+	}
+
+	private void wander() {
+		if (wanderCount > wanderThreshold) {
+
+			// Jump to a new location
+			this.state = State.JUMP;
+			jump();
+
+		} else {
 			// Move to random direction, see if there is honey, if so, pick it up
 			var direction = random.nextInt(4);
 			switch (direction) {
@@ -95,18 +189,99 @@ public class Bee {
 				break;
 			}
 
-			var optionalFlower = getFlower(grid, x, y);
-			if (optionalFlower.isPresent()) {
-				this.state = State.RETURN_TO_HIVE;
-				var flower = optionalFlower.get();
-				if (flower.hasNectar()) {
-					nectar += flower.grabNectar();
-					moveTowardsHive(x, y);
+			handleAtFlower();
+		}
+	}
+
+	private void handleAtFlower() {
+		var location = grid.getLocation(this);
+		var x = location.getX();
+		var y = location.getY();
+
+		var optionalFlower = getFlower(grid, x, y);
+		if (optionalFlower.isPresent()) {
+			this.state = State.RETURN_TO_HIVE;
+			var flower = optionalFlower.get();
+			var flowerNectar = flower.nectarContent();
+			if (flowerNectar > 0) {
+				nectar += flower.grabNectar();
+				if (--flowerNectar > 0) {
+					// save the Flower
+					var dist = Math.sqrt(Math.pow(hiveX - x, 2) + Math.pow(hiveY - y, 2));
+					this.knownFlower = new FlowerLocation(x, y, flowerNectar, dist);
 				}
 			}
-			break;
+
+			// Log
+			var template = "NECTAR FOUND\nBee: %d \nFlower: %d\nTick: %d";
+			long tick = (long) RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
+			LOGGER.info(String.format(template, id, flower.getId(), tick));
+		} else {
+			this.state = State.WANDER;
+			this.knownFlower = null;
+		}
+	}
+
+	private void moveTowardsHive() {
+		var arrived = moveTowards(hiveX, hiveY);
+		if (arrived) {
+			state = State.DEPOSIT_NECTAR;
+			var optHive = getHive(grid, hiveX, hiveY);
+			if (optHive.isPresent()) {
+				final var hive = optHive.get();
+				hive.deposit(nectar);
+				nectar = 0;
+			}
+		}
+	}
+
+	private boolean moveTowards(int destX, int destY) {
+		var location = grid.getLocation(this);
+		var x = location.getX();
+		var y = location.getY();
+
+		var diffX = destX - x;
+		if (diffX > 0) {
+			// Move right
+			x++;
+			grid.moveByDisplacement(this, 1, 0);
+		} else if (diffX < 0) {
+			// Move left
+			x--;
+			grid.moveByDisplacement(this, -1, 0);
+		}
+		var diffY = destY - y;
+		if (diffY > 0) {
+			// Move up
+			y++;
+			grid.moveByDisplacement(this, 0, 1);
+		} else if (diffY < 0) {
+			// Move down
+			y--;
+			grid.moveByDisplacement(this, 0, -1);
 		}
 
+		// Check if the cell is the destination
+		return x == destX && y == destY;
+	}
+
+	public FlowerLocation getKnownFlower() {
+		return knownFlower;
+	}
+
+	public State getState() {
+		return state;
+	}
+
+	private static FlowerLocation bestWaggle(List<Bee> wagglers) {
+		var best = wagglers.get(0).getKnownFlower();
+		for (Bee bee : wagglers) {
+			var flower = bee.getKnownFlower();
+			if (flower.getScore() > best.getScore()) {
+				best = flower;
+			}
+		}
+		return best.getCopy();
 	}
 
 	/**

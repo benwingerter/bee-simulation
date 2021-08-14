@@ -8,27 +8,33 @@ import repast.simphony.space.grid.Grid;
 import repast.simphony.util.ContextUtils;
 
 public class Flower {
-	
+
+	private final int id;
 	private final Grid<Object> grid;
 	private final Random random;
 	private int nectar = 5;
 	private int x;
 	private int y;
-	
-	public Flower(Grid<Object> grid, Random random) {
+
+	public Flower(Grid<Object> grid, Random random, int id) {
 		this.grid = grid;
 		this.random = random;
 		// TODO handle case for hive location
 		x = random.nextInt(50);
 		y = random.nextInt(50);
+		this.id = id;
 	}
-	
+
+	public int getId() {
+		return id;
+	}
+
 	@ScheduledMethod(start = 0)
 	public void init() {
 		// Move to a random spot on the grid
 		grid.moveTo(this, x, y);
 	}
-	
+
 	/**
 	 * Get nectar from the flower
 	 * 
@@ -36,28 +42,28 @@ public class Flower {
 	 */
 	public int grabNectar() {
 		nectar--;
-		if(nectar == 0) {
-			final Context<Object> context = (Context<Object>)ContextUtils.getContext(this);
+		if (nectar == 0) {
+			final Context<Object> context = (Context<Object>) ContextUtils.getContext(this);
 			context.remove(this);
 		}
 		return 1;
 	}
-	
+
 	/**
-	 * Whether the flower has nectar
+	 * How much nectar the flower has
 	 * 
 	 * @return
 	 */
-	public boolean hasNectar() {
-		return nectar > 0;
+	public int nectarContent() {
+		return nectar;
 	}
-	
+
 	public int getX() {
 		return x;
 	}
-	
+
 	public int getY() {
 		return y;
 	}
-	
+
 }

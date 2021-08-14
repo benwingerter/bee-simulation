@@ -34,13 +34,13 @@ public class BeeSimulationContextBuilder implements ContextBuilder<Object> {
 		grid.moveTo(hive, startX, startY);
 
 		for (int i = 0; i < 15; i++) {
-			final var bee = new Bee(grid, random);
+			final var bee = new Bee(grid, random, i);
 			context.add(bee);
 			grid.moveTo(bee, startX, startY);
 		}
 
 		for (int i = 0; i < 20; i++) {
-			context.add(new Flower(grid, random));
+			context.add(new Flower(grid, random, i));
 		}
 
 		return context;
