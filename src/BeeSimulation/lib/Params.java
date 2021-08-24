@@ -2,7 +2,8 @@ package BeeSimulation.lib;
 
 public enum Params {
 
-	RANDOM_SEED("randomSeed");
+	RANDOM_SEED("randomSeed"),
+	SIGHT_RADIUS("sightRadius");
 
 	private final String value;
 

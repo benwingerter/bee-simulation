@@ -20,7 +20,7 @@ import org.apache.commons.math3.distribution.NormalDistribution;
 public class Bee {
 
 	private final static Logger LOGGER = BeeLogger.getLogger();
-	private final static int SIGHT_RADIUS = 3;
+	private final int sightRadius;
 	private final int id;
 	private final Grid<Object> grid;
 	private final Random random;
@@ -48,6 +48,8 @@ public class Bee {
 		this.random = random;
 		hiveX = 0;
 		hiveY = 0;
+		Parameters p = RunEnvironment.getInstance().getParameters();
+		sightRadius = (Integer) p.getValue(Params.SIGHT_RADIUS.getValue());
 	}
 
 	@ScheduledMethod(start = 1, interval = 1, shuffle = true)
@@ -233,7 +235,7 @@ public class Bee {
 				var location = grid.getLocation(this);
 				var x = location.getX();
 				var y = location.getY();
-				var flowers = getFlower(grid, x, y, SIGHT_RADIUS);
+				var flowers = getFlower(grid, x, y, sightRadius);
 				if (!flowers.isEmpty()) {
 					// Get the nearest flower
 					var closest = flowers.get(0);

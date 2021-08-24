@@ -2,5 +2,6 @@
 <parameters>
 
 	<parameter name="randomSeed" displayName="Default Random Seed" type="int" defaultValue="32" />
+	<parameter name="sightRadius" displayName="Sight Radius" type="int" defaultValue="3" />
 
 </parameters>
