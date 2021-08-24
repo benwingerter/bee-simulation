@@ -43,6 +43,7 @@ public class Flower {
 	public int grabNectar() {
 		nectar--;
 		if (nectar == 0) {
+			@SuppressWarnings("unchecked")
 			final Context<Object> context = (Context<Object>) ContextUtils.getContext(this);
 			context.remove(this);
 		}

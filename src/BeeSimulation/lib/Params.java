@@ -9,4 +9,8 @@ public enum Params {
 	private Params(String value) {
 		this.value = value;
 	}
+	
+	public String getValue() {
+		return value;
+	}
 }

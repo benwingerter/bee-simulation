@@ -12,6 +12,8 @@ import repast.simphony.space.grid.SimpleGridAdder;
 import repast.simphony.space.grid.StickyBorders;
 import java.util.Random;
 
+import BeeSimulation.lib.Params;
+
 public class BeeSimulationContextBuilder implements ContextBuilder<Object> {
 
 	@Override
@@ -19,7 +21,7 @@ public class BeeSimulationContextBuilder implements ContextBuilder<Object> {
 		context.setId("BeeSimulation");
 
 		Parameters p = RunEnvironment.getInstance().getParameters();
-		var seed = (Integer) p.getValue("randomSeed");
+		var seed = (Integer) p.getValue(Params.RANDOM_SEED.getValue());
 		var random = new Random(seed);
 
 		var startX = 0;

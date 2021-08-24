@@ -1,10 +1,9 @@
-library(zoo)
-options(digits.secs = 3)
+library(plyr)
 
+options(digits.secs = 3)
 fileTable <- read.delim('../bee_model.log', header = FALSE, sep='\n')
 nectarFound <- data.frame(matrix(ncol = 3))
-colnames(nectarFound) <- c('Time', 'Bee', 'flower')
-dates <- c()
+colnames(nectarFound) <- c('Tick', 'Bee', 'flower')
 nectarCnt <- 0
 nectarCum <- c()
 for(i in 1:nrow(fileTable)) {
@@ -17,27 +16,20 @@ for(i in 1:nrow(fileTable)) {
       # add to data frame
       bee <- strsplit(fileTable[i + 1,], ": ")[[1]][2]
       flower <- strsplit(fileTable[i + 2,], ": ")[[1]][2]
-      # TODO fix with hour two digits
-      date <- substr(fileTable[i - 1,], 1, 28)
-      nectarFound <- rbind(nectarFound, c(date, bee, flower))
-      date <- as.numeric(as.POSIXct(date, format = "%b %d, %Y %l:%M:%OS %p"))
-      dates <- c(dates, date)
+      tick <- strsplit(fileTable[i + 3,], ": ")[[1]][2]
+      nectarFound <- rbind(nectarFound, c(tick, bee, flower))
       nectarCnt <- nectarCnt + 1
       nectarCum <- c(nectarCum, nectarCnt)
     }
   }
 }
 nectarFound <- nectarFound[-c(1),]
-nectarFound$dates <- dates
 nectarFound$cumulative <- nectarCum
 
-plot(irts(dates, nectarCum))
+nectarFound$nectar <- 1
 
-nectarFound$step <- 1
-
-library(plyr)
-df <- ddply(nectarFound, .(), transform, step=cumsum(step))
-plot(step~dates, data=df, type="s")
+df <- ddply(nectarFound, .(), transform, nectar=cumsum(nectar))
+plot(nectar~Tick, data=df, type="s", ylab="Total Nectar Retrieved", xlab="Ticks")
 
 
 

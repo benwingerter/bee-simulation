@@ -1,5 +1,6 @@
 package BeeSimulation.agents;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -7,13 +8,19 @@ import java.util.logging.Logger;
 import BeeSimulation.lib.BeeLogger;
 import BeeSimulation.lib.Coordinate;
 import BeeSimulation.lib.FlowerLocation;
+import BeeSimulation.lib.Params;
 import repast.simphony.engine.schedule.ScheduledMethod;
+import repast.simphony.parameter.Parameters;
 import repast.simphony.space.grid.*;
+import repast.simphony.util.ContextUtils;
+import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
+import org.apache.commons.math3.distribution.NormalDistribution;
 
 public class Bee {
 
 	private final static Logger LOGGER = BeeLogger.getLogger();
+	private final static int SIGHT_RADIUS = 3;
 	private final int id;
 	private final Grid<Object> grid;
 	private final Random random;
@@ -29,6 +36,7 @@ public class Bee {
 	private int waggleCount;
 	private int wanderCount;
 	private int jumpCount;
+	private boolean alive = true;
 
 	private static enum State {
 		WANDER, RETURN_TO_HIVE, DEPOSIT_NECTAR, AT_HIVE, WAGGLE, EXPLOIT, JUMP
@@ -44,6 +52,36 @@ public class Bee {
 
 	@ScheduledMethod(start = 1, interval = 1, shuffle = true)
 	public void step() {
+		if (!alive) {
+			return;
+		}
+		// Destroy the object if necessary
+		// TODO document grid size 6.5m
+
+		// Adapted from Khoury DS, Myerscough MR, Barron AB (2011) A Quantitative Model
+		// of Honey Bee Colony Population Dynamics. PLoS ONE 6(4): e18491. doi:10.1371/
+		// journal.pone.0018491
+		var days1 = 26.6 * 60 * 60 * 24;
+		var days2 = 8.9 * 60 * 60 * 24;
+
+		var dist = new NormalDistribution(days1, days2);
+
+		// Get seed
+		Parameters p = RunEnvironment.getInstance().getParameters();
+		var seed = (Integer) p.getValue(Params.RANDOM_SEED.getValue());
+
+		dist.reseedRandomGenerator(seed);
+		long tick = (long) RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
+		var prob = dist.cumulativeProbability(tick);
+		if (random.nextDouble() < prob) {
+			// Kill the bee
+			@SuppressWarnings("unchecked")
+			var context = (Context<Object>) ContextUtils.getContext(this);
+			context.remove(this);
+			alive = false;
+			return;
+		}
+
 		switch (state) {
 		case AT_HIVE:
 			atHive();
@@ -189,19 +227,47 @@ public class Bee {
 				break;
 			}
 
-			handleAtFlower();
+			var atFlower = handleAtFlower();
+			if (!atFlower) {
+				// Look for nearby flowers
+				var location = grid.getLocation(this);
+				var x = location.getX();
+				var y = location.getY();
+				var flowers = getFlower(grid, x, y, SIGHT_RADIUS);
+				if (!flowers.isEmpty()) {
+					// Get the nearest flower
+					var closest = flowers.get(0);
+					int closestDist = Integer.MAX_VALUE;
+					for (Flower flower : flowers) {
+						var dist = Math.sqrt(Math.pow(closest.getX() - x, 2) + Math.pow(closest.getY() - y, 2));
+						// If flower is closer, save it
+						if (dist < closestDist) {
+							closest = flower;
+						}
+					}
+					// Move towards nearest flower
+					this.knownFlower = new FlowerLocation(closest.getX(), closest.getY(), closest.nectarContent(),
+							(double) closestDist);
+					this.state = State.EXPLOIT;
+				}
+			}
 		}
 	}
 
-	private void handleAtFlower() {
+	/**
+	 * Checks if the bee is at a flower and handles state changes accordingly
+	 * 
+	 * @return Whether the bee is at a flower
+	 */
+	private boolean handleAtFlower() {
 		var location = grid.getLocation(this);
 		var x = location.getX();
 		var y = location.getY();
 
-		var optionalFlower = getFlower(grid, x, y);
-		if (optionalFlower.isPresent()) {
+		var flowers = getFlower(grid, x, y, 0);
+		if (!flowers.isEmpty()) {
+			var flower = flowers.get(0);
 			this.state = State.RETURN_TO_HIVE;
-			var flower = optionalFlower.get();
 			var flowerNectar = flower.nectarContent();
 			if (flowerNectar > 0) {
 				nectar += flower.grabNectar();
@@ -220,6 +286,7 @@ public class Bee {
 			this.state = State.WANDER;
 			this.knownFlower = null;
 		}
+		return !flowers.isEmpty();
 	}
 
 	private void moveTowardsHive() {
@@ -273,6 +340,12 @@ public class Bee {
 		return state;
 	}
 
+	/**
+	 * Get the ideal flower from all of the bees waggling
+	 * 
+	 * @param wagglers The bees currently dancing
+	 * @return The flower of the best dance
+	 */
 	private static FlowerLocation bestWaggle(List<Bee> wagglers) {
 		var best = wagglers.get(0).getKnownFlower();
 		for (Bee bee : wagglers) {
@@ -287,19 +360,22 @@ public class Bee {
 	/**
 	 * Get the flower in the given grid position if it exists
 	 * 
-	 * @param grid environment grid
-	 * @param x    x position
-	 * @param y    y position
+	 * @param grid   environment grid
+	 * @param x      x position
+	 * @param y      y position
+	 * @param radius The radius to check for seeing a flower
 	 * @return the flower if exists
 	 */
-	private static Optional<Flower> getFlower(Grid<Object> grid, int x, int y) {
+	private static List<Flower> getFlower(Grid<Object> grid, int x, int y, int radius) {
 		var objs = grid.getObjects();
+		List<Flower> flowers = new ArrayList<>();
 		for (Object obj : objs) {
-			if (obj instanceof Flower && ((Flower) obj).getX() == x && ((Flower) obj).getY() == y) {
-				return Optional.of((Flower) obj);
+			if (obj instanceof Flower && Math
+					.sqrt(Math.pow(((Flower) obj).getX() - x, 2) + Math.pow(((Flower) obj).getY() - y, 2)) <= radius) {
+				flowers.add((Flower) obj);
 			}
 		}
-		return Optional.empty();
+		return flowers;
 	}
 
 	/**
