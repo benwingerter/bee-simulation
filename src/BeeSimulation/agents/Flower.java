@@ -11,17 +11,21 @@ public class Flower {
 
 	private final int id;
 	private final Grid<Object> grid;
-	private final Random random;
-	private int nectar = 5;
+	private int nectar;
 	private int x;
 	private int y;
 
-	public Flower(Grid<Object> grid, Random random, int id) {
+	public Flower(Grid<Object> grid, Random random, int id, int hiveX, int hiveY) {
 		this.grid = grid;
-		this.random = random;
-		// TODO handle case for hive location
+		this.nectar = random.nextInt(5) + 1;
 		x = random.nextInt(50);
+		while (x == hiveX) {
+			x = random.nextInt(50);
+		}
 		y = random.nextInt(50);
+		while (y == hiveY) {
+			y = random.nextInt(50);
+		}
 		this.id = id;
 	}
 

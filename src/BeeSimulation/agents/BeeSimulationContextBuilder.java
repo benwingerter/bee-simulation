@@ -20,29 +20,32 @@ public class BeeSimulationContextBuilder implements ContextBuilder<Object> {
 	public Context<Object> build(Context<Object> context) {
 		context.setId("BeeSimulation");
 
+		var gridXWidth = 50;
+		var gridYWidth = 50;
+
 		Parameters p = RunEnvironment.getInstance().getParameters();
 		var seed = (Integer) p.getValue(Params.RANDOM_SEED.getValue());
 		var random = new Random(seed);
 
-		var startX = 0;
-		var startY = 0;
+		var hiveX = random.nextInt(gridXWidth);
+		var hiveY = random.nextInt(gridYWidth);
 
 		GridFactory gridFactory = GridFactoryFinder.createGridFactory(null);
-		Grid<Object> grid = gridFactory.createGrid("Grid", context,
-				new GridBuilderParameters<Object>(new StickyBorders(), new SimpleGridAdder<Object>(), true, 50, 50));
+		Grid<Object> grid = gridFactory.createGrid("Grid", context, new GridBuilderParameters<Object>(
+				new StickyBorders(), new SimpleGridAdder<Object>(), true, gridXWidth, gridXWidth));
 
-		Hive hive = new Hive(startX, startY);
+		Hive hive = new Hive(hiveX, hiveY);
 		context.add(hive);
-		grid.moveTo(hive, startX, startY);
+		grid.moveTo(hive, hiveX, hiveY);
 
 		for (int i = 0; i < 15; i++) {
-			final var bee = new Bee(grid, random, i);
+			final var bee = new Bee(grid, random, i, hiveX, hiveY);
 			context.add(bee);
-			grid.moveTo(bee, startX, startY);
+			grid.moveTo(bee, hiveX, hiveY);
 		}
 
 		for (int i = 0; i < 20; i++) {
-			context.add(new Flower(grid, random, i));
+			context.add(new Flower(grid, random, i, hiveX, hiveY));
 		}
 
 		return context;

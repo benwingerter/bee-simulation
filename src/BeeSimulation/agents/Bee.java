@@ -42,12 +42,12 @@ public class Bee {
 		WANDER, RETURN_TO_HIVE, DEPOSIT_NECTAR, AT_HIVE, WAGGLE, EXPLOIT, JUMP
 	}
 
-	public Bee(Grid<Object> grid, Random random, int id) {
+	public Bee(Grid<Object> grid, Random random, int id, int hiveX, int hiveY) {
 		this.id = id;
 		this.grid = grid;
 		this.random = random;
-		hiveX = 0;
-		hiveY = 0;
+		this.hiveX = hiveX;
+		this.hiveY = hiveY;
 		Parameters p = RunEnvironment.getInstance().getParameters();
 		sightRadius = (Integer) p.getValue(Params.SIGHT_RADIUS.getValue());
 	}
