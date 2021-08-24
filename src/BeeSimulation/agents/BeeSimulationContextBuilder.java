@@ -19,20 +19,20 @@ public class BeeSimulationContextBuilder implements ContextBuilder<Object> {
 	@Override
 	public Context<Object> build(Context<Object> context) {
 		context.setId("BeeSimulation");
-
-		var gridXWidth = 50;
-		var gridYWidth = 50;
-
 		Parameters p = RunEnvironment.getInstance().getParameters();
+
+		var gridWidth = (Integer) p.getValue(Params.GRID_WIDTH.getValue());
+		var gridHeight = (Integer) p.getValue(Params.GRID_HEIGHT.getValue());
+
 		var seed = (Integer) p.getValue(Params.RANDOM_SEED.getValue());
 		var random = new Random(seed);
 
-		var hiveX = random.nextInt(gridXWidth);
-		var hiveY = random.nextInt(gridYWidth);
+		var hiveX = random.nextInt(gridWidth);
+		var hiveY = random.nextInt(gridHeight);
 
 		GridFactory gridFactory = GridFactoryFinder.createGridFactory(null);
 		Grid<Object> grid = gridFactory.createGrid("Grid", context, new GridBuilderParameters<Object>(
-				new StickyBorders(), new SimpleGridAdder<Object>(), true, gridXWidth, gridXWidth));
+				new StickyBorders(), new SimpleGridAdder<Object>(), true, gridWidth, gridHeight));
 
 		Hive hive = new Hive(hiveX, hiveY);
 		context.add(hive);
@@ -45,7 +45,7 @@ public class BeeSimulationContextBuilder implements ContextBuilder<Object> {
 		}
 
 		for (int i = 0; i < 20; i++) {
-			context.add(new Flower(grid, random, i, hiveX, hiveY));
+			context.add(new Flower(grid, random, i, hiveX, hiveY, gridWidth, gridHeight));
 		}
 
 		return context;

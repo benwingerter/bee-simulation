@@ -15,16 +15,16 @@ public class Flower {
 	private int x;
 	private int y;
 
-	public Flower(Grid<Object> grid, Random random, int id, int hiveX, int hiveY) {
+	public Flower(Grid<Object> grid, Random random, int id, int hiveX, int hiveY, int gridWidth, int gridHeight) {
 		this.grid = grid;
 		this.nectar = random.nextInt(5) + 1;
-		x = random.nextInt(50);
+		x = random.nextInt(gridWidth);
 		while (x == hiveX) {
-			x = random.nextInt(50);
+			x = random.nextInt(gridHeight);
 		}
-		y = random.nextInt(50);
+		y = random.nextInt(gridWidth);
 		while (y == hiveY) {
-			y = random.nextInt(50);
+			y = random.nextInt(gridHeight);
 		}
 		this.id = id;
 	}
