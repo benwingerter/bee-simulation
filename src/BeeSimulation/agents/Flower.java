@@ -1,42 +1,25 @@
 package BeeSimulation.agents;
 
 import java.util.Random;
-
 import repast.simphony.context.Context;
-import repast.simphony.engine.schedule.ScheduledMethod;
-import repast.simphony.space.grid.Grid;
 import repast.simphony.util.ContextUtils;
 
 public class Flower {
 
 	private final int id;
-	private final Grid<Object> grid;
 	private int nectar;
 	private int x;
 	private int y;
 
-	public Flower(Grid<Object> grid, Random random, int id, int hiveX, int hiveY, int gridWidth, int gridHeight) {
-		this.grid = grid;
+	public Flower(Random random, int id, int x, int y) {
 		this.nectar = random.nextInt(5) + 1;
-		x = random.nextInt(gridWidth);
-		while (x == hiveX) {
-			x = random.nextInt(gridHeight);
-		}
-		y = random.nextInt(gridWidth);
-		while (y == hiveY) {
-			y = random.nextInt(gridHeight);
-		}
+		this.x = x;
+		this.y = y;
 		this.id = id;
 	}
 
 	public int getId() {
 		return id;
-	}
-
-	@ScheduledMethod(start = 0)
-	public void init() {
-		// Move to a random spot on the grid
-		grid.moveTo(this, x, y);
 	}
 
 	/**

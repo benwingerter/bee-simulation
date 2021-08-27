@@ -1,25 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <parameters>
-					<parameter name="randomSeed" displayName="Default Random Seed" type="int" 
-						defaultValue="32" 
-						isReadOnly="false" 
-						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
-											/>
-				<parameter name="gridHeight" displayName="Grid Height" type="int" 
-						defaultValue="500" 
-						isReadOnly="false" 
-						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
-											/>
-				<parameter name="sightRadius" displayName="Sight Radius" type="int" 
-						defaultValue="3" 
-						isReadOnly="false" 
-						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
-											/>
-				<parameter name="gridWidth" displayName="Grid Width" type="int" 
-						defaultValue="500" 
-						isReadOnly="false" 
-						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
-											/>
-		</parameters>
+	<parameter name="randomSeed"
+		displayName="Default Random Seed" type="int" defaultValue="32"
+		isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="gridHeight" displayName="Grid Height"
+		type="int" defaultValue="500" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="sightRadius" displayName="Sight Radius"
+		type="int" defaultValue="3" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="gridWidth" displayName="Grid Width"
+		type="int" defaultValue="500" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="numBees" displayName="Number of Bees"
+		type="int" defaultValue="15" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+	<parameter name="flowerDensity" displayName="Flower Density"
+		type="double" defaultValue="0.02" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
+	<parameter name="flowerRegenRate" displayName="Flower Regeneration Rate"
+		type="double" defaultValue="0.01" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
+	<parameter name="beeRegenRate" displayName="Bee Regeneration Rate (if resources permit)"
+		type="double" defaultValue="0.01" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
+	<parameter name="beeCost" displayName="Cost of New Bee"
+		type="int" defaultValue="5" isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+
+</parameters>
 
 
