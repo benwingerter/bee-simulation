@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import BeeSimulation.lib.BeeLogger;
 import BeeSimulation.lib.Coordinate;
 import BeeSimulation.lib.FlowerLocation;
@@ -16,6 +19,7 @@ import repast.simphony.util.ContextUtils;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import org.apache.commons.math3.distribution.NormalDistribution;
+import repast.simphony.ui.probe.ProbedProperty;
 
 public class Bee {
 
@@ -57,12 +61,11 @@ public class Bee {
 		if (!alive) {
 			return;
 		}
-		// Destroy the object if necessary
-		// TODO document grid size 6.5m
 
 		// Adapted from Khoury DS, Myerscough MR, Barron AB (2011) A Quantitative Model
 		// of Honey Bee Colony Population Dynamics. PLoS ONE 6(4): e18491. doi:10.1371/
 		// journal.pone.0018491
+		// Grid size: 6.5m
 		var days1 = 26.6 * 60 * 60 * 24;
 		var days2 = 8.9 * 60 * 60 * 24;
 
@@ -388,13 +391,16 @@ public class Bee {
 	 * @param y    y position
 	 * @return the hive if exists
 	 */
-	private static Optional<Hive> getHive(Grid<Object> grid, int x, int y) {
-		var objs = grid.getObjects();
-		for (Object obj : objs) {
-			if (obj instanceof Hive && ((Hive) obj).getX() == x && ((Hive) obj).getY() == y) {
-				return Optional.of((Hive) obj);
-			}
+	private Optional<Hive> getHive(Grid<Object> grid, int x, int y) {
+		@SuppressWarnings("unchecked")
+		var context = (Context<Hive>) ContextUtils.getContext(this);
+		Stream<Hive> s = context.getObjectsAsStream(Hive.class);
+		List<Hive> hives = s.filter(h -> {
+			return h.getX() == x && h.getY() == y;
+		}).collect(Collectors.toList());
+		if (hives.isEmpty()) {
+			return Optional.empty();
 		}
-		return Optional.empty();
+		return Optional.of(hives.get(0));
 	}
 }

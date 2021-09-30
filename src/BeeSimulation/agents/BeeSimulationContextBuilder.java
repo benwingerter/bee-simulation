@@ -13,8 +13,6 @@ import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridBuilderParameters;
 import repast.simphony.space.grid.SimpleGridAdder;
 import repast.simphony.space.grid.StickyBorders;
-
-import java.util.Optional;
 import java.util.Random;
 import BeeSimulation.lib.Params;
 
@@ -31,6 +29,11 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 	private int flowerIdCntr = -1;
 	private double flowerRegenRate;
 
+	/**
+	 * Setup the simulation context
+	 * 
+	 * @return the created context
+	 */
 	public Context<Object> build(Context<Object> context) {
 
 		this.context = context;
