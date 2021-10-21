@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <parameters>
-					<parameter name="randomSeed" displayName="Default Random Seed" type="int" 
-						defaultValue="32" 
-						isReadOnly="false" 
-						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+				<parameter name="randomSeed" displayName="Default Random Seed" type="int" 
+					defaultValue="32" 
+					isReadOnly="false" 
+					converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 											/>
 				<parameter name="gridHeight" displayName="Grid Height" type="int" 
 						defaultValue="50" 
@@ -31,7 +31,7 @@
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 											/>
 				<parameter name="sightRadius" displayName="Sight Radius" type="int" 
-						defaultValue="3" 
+						defaultValue="1" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 											/>

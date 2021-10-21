@@ -284,9 +284,13 @@ public class Bee {
 			}
 
 			// Log
-			var template = "NECTAR FOUND\nBee: %d \nFlower: %d\nTick: %d";
+			var template = "NECTAR FOUND\nBee: %d \nFlower: %d\nTick: %d\nBee Count: %d";
 			long tick = (long) RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
-			LOGGER.info(String.format(template, id, flower.getId(), tick));
+			@SuppressWarnings("unchecked")
+			var context = (Context<Object>) ContextUtils.getContext(this);
+			Stream<Object> s = context.getObjectsAsStream(Bee.class);
+			long beeCnt = s.count();
+			LOGGER.info(String.format(template, id, flower.getId(), tick, beeCnt));
 		} else {
 			this.state = State.WANDER;
 			this.knownFlower = null;
