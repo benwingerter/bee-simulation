@@ -3,6 +3,7 @@
 *.log.*
 *.DS_Store
 output
+batch/batch_configuration.properties
 
 # Compiled class file
 *.class
