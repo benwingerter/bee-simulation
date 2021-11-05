@@ -6,6 +6,7 @@ output
 batch/batch_configuration.properties
 log_analysis/.Rdata
 log_analysis/.Rhistory
+bin/
 
 # Compiled class file
 *.class
@@ -20,7 +21,6 @@ log_analysis/.Rhistory
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear
