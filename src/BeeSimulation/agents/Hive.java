@@ -16,7 +16,6 @@ public class Hive {
 
 	private final Random random;
 	private final Grid<Object> grid;
-	private final double beeRegenRate;
 	private final int x;
 	private final int y;
 	private final int beeCost;
@@ -32,7 +31,6 @@ public class Hive {
 		Parameters p = RunEnvironment.getInstance().getParameters();
 		beeIdCntr = (Integer) p.getValue(Params.NUM_BEES.getValue()) - 1;
 		beeCost = (Integer) p.getValue(Params.BEE_COST.getValue());
-		beeRegenRate = (Double) p.getValue(Params.BEE_REGEN_RATE.getValue());
 	}
 
 	@ScheduledMethod(start = 1, interval = 1, shuffle = true)

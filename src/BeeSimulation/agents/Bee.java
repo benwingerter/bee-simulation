@@ -19,7 +19,6 @@ import repast.simphony.util.ContextUtils;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import org.apache.commons.math3.distribution.NormalDistribution;
-import repast.simphony.ui.probe.ProbedProperty;
 
 public class Bee {
 

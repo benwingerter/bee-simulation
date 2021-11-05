@@ -13,7 +13,6 @@ import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridBuilderParameters;
 import repast.simphony.space.grid.SimpleGridAdder;
 import repast.simphony.space.grid.StickyBorders;
-import repast.simphony.util.ContextUtils;
 
 import java.util.Random;
 import java.util.logging.Logger;
@@ -22,6 +21,10 @@ import java.util.stream.Stream;
 import BeeSimulation.lib.BeeLogger;
 import BeeSimulation.lib.Params;
 
+/**
+ * Builds the simulation context. This class is NOT re-instantiated when the model is reset
+ *
+ */
 public class BeeSimulationContextBuilder extends DefaultContext<Object> implements ContextBuilder<Object> {
 
 	private final static Logger LOGGER = BeeLogger.getLogger();
@@ -35,6 +38,8 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 	private int beeIdCntr;
 	private int flowerIdCntr = -1;
 	private double flowerRegenRate;
+	private int MAX_TICKS = 10000;
+	private long ticks = 0;
 
 	/**
 	 * Setup the simulation context
@@ -44,6 +49,8 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 	public Context<Object> build(Context<Object> context) {
 
 		this.context = context;
+		
+		ticks = 0;
 
 		context.setId("BeeSimulation");
 		Parameters p = RunEnvironment.getInstance().getParameters();
@@ -92,10 +99,10 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 		ISchedule schedule = RunEnvironment.getInstance().getCurrentSchedule();
 		ScheduleParameters addFlower = ScheduleParameters.createRepeating(1, 1);
 		schedule.schedule(addFlower, this, "addFlower");
-		ScheduleParameters checkDone = ScheduleParameters.createRepeating(1, 10);
+		ScheduleParameters checkDone = ScheduleParameters.createRepeating(1, 1);
 		schedule.schedule(checkDone, this, "checkDone");
-		ScheduleParameters logPop = ScheduleParameters.createRepeating(1, 10);
-		schedule.schedule(checkDone, this, "logPop");
+		ScheduleParameters logPop = ScheduleParameters.createRepeating(1, 1);
+		schedule.schedule(logPop, this, "logPop");
 		return context;
 	}
 
@@ -103,6 +110,7 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 	 * Terminate the simulation if it is finished
 	 */
 	public void checkDone() {
+		ticks++;
 		// loop through all bees and see if any are still alive.
 		var objs = grid.getObjects();
 		boolean bees = false;
@@ -112,7 +120,7 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 				break;
 			}
 		}
-		if (!bees) {
+		if (!bees || MAX_TICKS < ticks) {
 			RunEnvironment.getInstance().endRun();
 		}
 	}
@@ -122,17 +130,14 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 	 */
 	public void addFlower() {
 		if (random.nextDouble() < flowerRegenRate) {
-			int x;
+			int x,y;
 			do {
 				x = random.nextInt(gridWidth);
-			} while (x == hiveX);
-			int y;
-			do {
 				y = random.nextInt(gridHeight);
-			} while (y == hiveY);
+			} while (x == hiveX && y == hiveY);
 			var flower = new Flower(random, ++flowerIdCntr, x, y);
 			context.add(flower);
-			grid.moveTo(flower, x, y);
+			grid.moveTo(flower, x, y); 
 		}
 	}
 	

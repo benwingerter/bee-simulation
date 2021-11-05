@@ -78,11 +78,11 @@
         <panel classname="ShortcutPanel" id="shortcutpanel"/>
     </resources>
     <panels>
-        <panel classname="HelloPanel"/>
-        <panel classname="InfoPanel"/>
+		<!--<panel classname="HelloPanel"/>
+ 		<panel classname="InfoPanel"/>
+        <panel classname="PacksPanel"/> -->
         <panel classname="LicencePanel"/>
         <panel classname="TargetPanel"/> 
-        <panel classname="PacksPanel"/>
         <panel classname="InstallPanel"/>
         <panel classname="ShortcutPanel" id="shortcutpanel"/>
         <panel classname="FinishPanel"/>
@@ -154,10 +154,10 @@
            	<file src="$StagingOptionalArea/src" targetdir="$INSTALL_PATH/BeeSimulation"/>
         </pack>
 
-        <pack name="Documentation" required="no">
+<!--         <pack name="Documentation" required="no">
            	<description>The model documentation</description>
            	<file src="$StagingOptionalArea/docs" targetdir="$INSTALL_PATH/BeeSimulation"/>
-        </pack>
+        </pack> -->
 
 <!--        <pack name="Data" required="no">-->
 <!--            <description>The user data</description>-->
