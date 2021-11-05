@@ -5,6 +5,9 @@ options(digits.secs = 3)
 files <- dir('../output/logs')
 df <- data.frame()
 ratePop <- data.frame()
+popLogs <- data.frame(matrix(ncol = 4))
+colnames(popLogs) <- c('Tick', 'Bee', 'Flower', 'simulation')
+
 for(file in files) {
   if(grepl('bee_model', file, fixed=TRUE)) {
     fileTable <- read.delim(paste('../output/logs/', file, sep=''), header = FALSE, sep='\n')
@@ -15,6 +18,7 @@ for(file in files) {
     pops <- c()
     nectarCnt <- 0
     nectarCum <- c()
+    tickCntr <- 0
     for(i in 1:nrow(fileTable)) {
       line <- fileTable[i,]
       begin <- strtrim(fileTable[i,], 4);
@@ -31,8 +35,10 @@ for(file in files) {
           nectarCnt <- nectarCnt + 1
           nectarCum <- c(nectarCum, nectarCnt)
         } else if (action == 'POP LOG') {
+          tickCntr <- tickCntr + 1
           beeCnt <- strsplit(fileTable[i + 1,], ": ")[[1]][2]
           pops <- c(pops, beeCnt)
+          popLogs <- rbind(popLogs, c(tickCntr, beeCnt, 0, file))
         }
       }
     }
@@ -88,6 +94,14 @@ g <- ggplot(data=ratePop, aes(x=pop, y=rate, colour=file)) +
   ylab("Nectar Collection Rate")
 print(g)
 
-# TODO graph bee population counts
+# Graph bee population counts
+# TODO make this faster to plot by consolidating numbers
+# g <- ggplot(data=popLogs, aes(x=Tick, y=Bee, colour=file)) +
+#   geom_line() +
+#   geom_point() +
+#   ggtitle("Bee Population Logs") +
+#   xlab("Tick") +
+#   ylab("Bee Population")
+# print(g)
 
 # TODO graph flower population counts
