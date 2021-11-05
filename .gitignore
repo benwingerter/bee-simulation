@@ -4,6 +4,8 @@
 *.DS_Store
 output
 batch/batch_configuration.properties
+log_analysis/.Rdata
+log_analysis/.Rhistory
 
 # Compiled class file
 *.class
