@@ -4,7 +4,7 @@ public enum Params {
 
 	RANDOM_SEED("randomSeed"), SIGHT_RADIUS("sightRadius"), GRID_WIDTH("gridWidth"), GRID_HEIGHT("gridHeight"),
 	NUM_BEES("numBees"), FLOWER_DENSITY("flowerDensity"), BEE_COST("beeCost"), BEE_REGEN_RATE("beeRegenRate"),
-	FLOWER_REGEN_RATE("flowerRegenRate");
+	FLOWER_REGEN_RATE("flowerRegenRate"), MAX_TICKS("maxTicks");
 
 	private final String value;
 

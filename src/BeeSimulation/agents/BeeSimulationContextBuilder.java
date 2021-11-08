@@ -35,10 +35,10 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 	private int hiveY;
 	private int gridWidth;
 	private int gridHeight;
+	private int maxTicks;
 	private int beeIdCntr;
 	private int flowerIdCntr = -1;
 	private double flowerRegenRate;
-	private int MAX_TICKS = 10000;
 	private long ticks = 0;
 
 	/**
@@ -59,6 +59,7 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 		gridWidth = (Integer) p.getValue(Params.GRID_WIDTH.getValue());
 		gridHeight = (Integer) p.getValue(Params.GRID_HEIGHT.getValue());
 		flowerRegenRate = (Double) p.getValue(Params.FLOWER_REGEN_RATE.getValue());
+		maxTicks = (Integer) p.getValue(Params.MAX_TICKS.getValue());
 		var numBees = (Integer) p.getValue(Params.NUM_BEES.getValue());
 		var flowerDensity = (Double) p.getValue(Params.FLOWER_DENSITY.getValue());
 		var seed = (Integer) p.getValue(Params.RANDOM_SEED.getValue());
@@ -120,7 +121,7 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 				break;
 			}
 		}
-		if (!bees || MAX_TICKS < ticks) {
+		if (!bees || maxTicks <= ticks) {
 			RunEnvironment.getInstance().endRun();
 		}
 	}

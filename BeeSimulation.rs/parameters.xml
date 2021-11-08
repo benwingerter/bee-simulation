@@ -45,6 +45,11 @@
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 											/>
+				<parameter name="maxTicks" displayName="Max Ticks" type="int" 
+						defaultValue="8000" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+											/>
 		</parameters>
 
 
