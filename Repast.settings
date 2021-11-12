@@ -3,15 +3,21 @@
   <hashtable>
     <default>
       <loadFactor>0.75</loadFactor>
-      <threshold>3</threshold>
+      <threshold>8</threshold>
     </default>
-    <int>5</int>
-    <int>3</int>
-    <string>SettingsFileName</string>
-    <string>Repast.settings</string>
+    <int>11</int>
+    <int>6</int>
     <string>SettingsRegistryId</string>
     <string>Repast.registry</string>
+    <string>RStudio.home.2.8.0</string>
+    <string>/Applications/RStudio.app</string>
+    <string>RStudio.home</string>
+    <string>/Applications/RStudio.app</string>
     <string>LastLoadedScenario</string>
     <string>/Users/benwingerter/eclipse-workspace/BeeSimulation/BeeSimulation.rs</string>
+    <string>SettingsFileName</string>
+    <string>Repast.settings</string>
+    <string>RStudio.licenseAccepted</string>
+    <boolean>true</boolean>
   </hashtable>
 </simphony.settings.SettingsRegistry>

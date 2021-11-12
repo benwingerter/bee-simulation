@@ -3,6 +3,8 @@ package BeeSimulation.agents;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import BeeSimulation.lib.Params;
 import repast.simphony.context.Context;
@@ -20,6 +22,7 @@ public class Hive {
 	private final int y;
 	private final int beeCost;
 	private int nectar;
+	private int cumulativeNectar;
 	private List<Bee> wagglers = new LinkedList<Bee>();
 	private int beeIdCntr;
 
@@ -47,8 +50,13 @@ public class Hive {
 		}
 	}
 
+	public int getNectar() {
+		return nectar;
+	}
+
 	public void deposit(int nectar) {
 		this.nectar += nectar;
+		this.cumulativeNectar += nectar;
 	}
 
 	public int getX() {
@@ -69,5 +77,14 @@ public class Hive {
 
 	public List<Bee> getWagglers() {
 		return wagglers;
+	}
+	
+	public int getCumulativeNectar() {
+		return cumulativeNectar;
+	}
+	
+	public long beeCount() {
+		var context = (Context<Bee>) ContextUtils.getContext(this);
+		return context.getObjectsAsStream(Bee.class).count();
 	}
 }

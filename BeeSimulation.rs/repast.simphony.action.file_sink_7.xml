@@ -1,0 +1,12 @@
+<repast.simphony.data2.engine.FileSinkDescriptor simphonyVersion="2.8.0">
+  <name>Cumulative Nectar Count</name>
+  <dataSet>Cumulative Nectar Count</dataSet>
+  <delimiter>,</delimiter>
+  <format>TABULAR</format>
+  <sourceIds class="linked-hash-set">
+    <string>Cumulative Nectar</string>
+    <string>tick</string>
+  </sourceIds>
+  <fileName>cumulative_nectar.log</fileName>
+  <addTimeStamp>true</addTimeStamp>
+</repast.simphony.data2.engine.FileSinkDescriptor>

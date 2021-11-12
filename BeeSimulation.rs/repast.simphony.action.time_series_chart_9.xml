@@ -1,7 +1,7 @@
 <repast.simphony.chart2.engine.TimeSeriesChartDescriptor simphonyVersion="2.8.0">
   <name>Flower and Bee Count Chart</name>
   <dataSet>Flower and Bee Counts</dataSet>
-  <xAxisLabel>Tick Count</xAxisLabel>
+  <xAxisLabel>Tick</xAxisLabel>
   <yAxisLabel>Counts</yAxisLabel>
   <chartTitle>Flower and Bee Count Time Series Chart</chartTitle>
   <type>TIME_SERIES</type>

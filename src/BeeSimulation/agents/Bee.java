@@ -32,13 +32,14 @@ public class Bee {
 	private final int jumpPersistence = 10;
 	private FlowerLocation knownFlower;
 	private State state = State.WANDER;
+	private Optional<Coordinate> jumpTo = Optional.empty();
 	private int hiveX;
 	private int hiveY;
-	private Optional<Coordinate> jumpTo = Optional.empty();
 	private int nectar;
 	private int waggleCount;
 	private int wanderCount;
 	private int jumpCount;
+	private long foundNectarTick = (long) RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
 	private boolean alive = true;
 
 	private static enum State {
@@ -53,6 +54,23 @@ public class Bee {
 		this.hiveY = hiveY;
 		Parameters p = RunEnvironment.getInstance().getParameters();
 		sightRadius = (Integer) p.getValue(Params.SIGHT_RADIUS.getValue());
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * @return if nectar was found during this tick
+	 */
+	public int foundNectar() {
+		long tick = (long) RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
+		if(foundNectarTick == tick) {
+			return 1;
+		}
+		return 0;
 	}
 
 	@ScheduledMethod(start = 1, interval = 1, shuffle = true)
@@ -270,6 +288,7 @@ public class Bee {
 
 		var flowers = getFlower(grid, x, y, 0);
 		if (!flowers.isEmpty()) {
+			this.foundNectarTick = (long) RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
 			var flower = flowers.get(0);
 			this.state = State.RETURN_TO_HIVE;
 			var flowerNectar = flower.nectarContent();
