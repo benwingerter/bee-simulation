@@ -6,7 +6,9 @@ output
 batch/batch_configuration.properties
 log_analysis/.Rdata
 log_analysis/.Rhistory
+RHome
 bin/
+.temp
 
 # Compiled class file
 *.class
