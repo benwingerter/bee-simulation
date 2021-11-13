@@ -1,123 +1,70 @@
-library(plyr)
 library(ggplot2)
+library(ramify)
 
-options(digits.secs = 3)
-files <- dir('../output/logs')
-df <- data.frame()
-ratePop <- data.frame()
-popLogs <- data.frame(matrix(ncol = 4))
-# colnames(popLogs) <- c('Tick', 'Bee', 'Flower', 'simulation')
+popCounts <- read.csv('../output/population_counts.2021.Nov.12.10_59_16.log', header = TRUE)
+nectarCollection <- read.csv('../output/nectar_collection.2021.Nov.12.10_59_16.log', header = TRUE)
+cumNectar <- read.csv('../output/cumulative_nectar.2021.Nov.12.10_59_16.log', header = TRUE)
 
-for(file in files) {
-  if(grepl('bee_model', file, fixed=TRUE)) {
-    fileTable <- read.delim(paste('../output/logs/', file, sep=''), header = FALSE, sep='\n')
+runs <- popCounts$run[!duplicated(popCounts$run)]
 
-    # Parse Log File
-    i <- 1
-    j <- 1
-    nectarFound <- data.frame(matrix(ncol = 4, nrow=1000))
-    
-    # colnames(nectarFound) <- c('Tick', 'Bee', 'flower', 'Bee Count')
-    pops <- c()
-    nectarCnt <- 0
-    nectarCum <- c()
-    tickCntr <- 0
-    for(i in 1:nrow(fileTable)) {
-      line <- fileTable[i,]
-      begin <- strtrim(fileTable[i,], 4);
-      if(begin == "INFO") {
-        # Get Info
-        action <- strsplit(line, ": ")[[1]][2]
-        if(action == 'NECTAR FOUND') {
-          # Add to data frame
-          bee <- strsplit(fileTable[i + 1,], ": ")[[1]][2]
-          flower <- strsplit(fileTable[i + 2,], ": ")[[1]][2]
-          tick <- strsplit(fileTable[i + 3,], ": ")[[1]][2]
-          beeCnt <- strsplit(fileTable[i + 4,], ": ")[[1]][2]
-          nectarCnt <- nectarCnt + 1
-          nectarCum <- c(nectarCum, nectarCnt)
-          
-          i <- i+1
-          nectarFound[i,] <- c(tick, bee, flower, beeCnt)
-          if(i == nrow(nectarFound)) {
-            nectarFound <- rbind(nectarFound, data.frame(matrix(ncol = 4, nrow=1000)))
-          }
-          
-        } else if (action == 'POP LOG') {
-          tickCntr <- tickCntr + 1
-          beeCnt <- strsplit(fileTable[i + 1,], ": ")[[1]][2]
-          pops <- c(pops, beeCnt)
-
-          j <- j+1
-          popLogs[j,] <- c(tickCntr, beeCnt, 0, file)
-          # popLogs <- rbind(popLogs, c(tickCntr, beeCnt, 0, file))
-          if(j == nrow(popLogs)) {
-            popLogs <- rbind(popLogs, data.frame(matrix(ncol = 4, nrow=1000)))
-          }
-        }
-      }
-    }
-    
-    # Cumulative Nectar
-    nectarFound <- nectarFound[-c(1),]
-    nectarFound$cumulative <- nectarCum
-    nectarFound$simulation <- file
-    nectarFound$nectar <- 1
-    df1 <- NULL
-    df1 <- ddply(nectarFound, .(), transform, nectar=cumsum(nectar))
-    df1$Tick <- as.numeric(df1$Tick)
-    if(nrow(df) == 0) {
-      df <- df1
-    } else {
-      df <- rbind(df, df1)
-    }
-
-    # Average Rate of Collection
-    rates <- c()
-    for(i in 1:max(pops)) {
-      ticks <- sum(pops == i)
-      nectar <- sum(nectarFound$`Bee Count` == i)
-      rate <- nectar / ticks
-      rates <- c(rates, rate)
-    }
-    ratePopDf <- data.frame(rates, seq(1, max(pops), 1))
-    ratePopDf$simulation <- file
-    colnames(ratePopDf) <- c('rate', 'pop', 'file')
-    if(nrow(ratePop) == 0) {
-      ratePop <- ratePopDf
-    } else {
-      ratePop <- rbind(ratePop, ratePopDf)
-    }
-  }
+get_rate <- function(popCounts, nectarCollection) {
+  pops <- seq(0:max(popCounts$Bee.Count))
+  sapply(pops, function(pop) {
+    ticks_at_pop <- popCounts[popCounts$Bee.Count==pop,]$tick
+    nectar_at_pop <- Reduce("+", sapply(ticks_at_pop, function(tick) {
+      sum(nectarCollection[nectarCollection$tick == tick,]$foundNectar)
+    }))
+    num_ticks_at_pop <- sum(popCounts$Bee.Count == pop)
+    rate <- ifelse(num_ticks_at_pop > 0, nectar_at_pop / num_ticks_at_pop, 0)
+    return(rate)
+  })
 }
 
-# Cumulative Nectar Collection Chart
-g <- ggplot(data=df, aes(x=Tick, y=nectar, colour=simulation)) +
+rates <- sapply(runs, function(run) {
+  get_rate(popCounts[popCounts$run == run,], nectarCollection[nectarCollection$run == run,])
+})
+
+# get vector for runs with runs in order
+max_pop <- max(popCounts$Bee.Count)
+runs_col <- sapply(runs, function(run) {
+  rep(run, max_pop + 1)
+})
+runs_col <- flatten(runs_col, "columns")
+rates <- flatten(rates, "columns")
+pops <- sapply(runs, function(run) {
+  seq(1, max_pop + 1, 1)
+})
+pops <- flatten(pops, "columns")
+rates_df <- data.frame(runs=runs_col, rates, pops)
+
+g <- ggplot(data=rates_df, aes(x=pops, y=rates, group=runs, color=factor(runs))) +
   geom_line() +
-  geom_point() +
-  ggtitle("Cumulative Nectar Collection") +
-  xlab("Total Nectar Collected") +
-  ylab("Ticks")
+  ggtitle("Nectar Collection Rates") +
+  xlab("Bee Population") +
+  ylab("Rate of Collection (Nectar/ticks at population)") +
+  labs(color="Run")
 print(g)
 
-# Collection Rate Chart
-g <- ggplot(data=ratePop, aes(x=pop, y=rate, colour=file)) +
+g <- ggplot(data=popCounts, aes(x=tick, y=Bee.Count, group=run, color=factor(run))) +
   geom_line() +
-  geom_point() +
-  ggtitle("Average Collection Rates") +
-  xlab("Population") +
-  ylab("Nectar Collection Rate")
-print(g)
-
-# Graph bee population counts
-# TODO make this faster to plot by consolidating numbers
-popLogs$Tick <- as.numeric(popLogs$Tick)
-g <- ggplot(data=popLogs, aes(x=Tick, y=Bee, colour=file)) +
-  geom_line() +
-  geom_point() +
-  ggtitle("Bee Population Logs") +
+  ggtitle("Bee Populations") +
   xlab("Tick") +
-  ylab("Bee Population")
+  ylab("Bee Population") +
+  labs(color="Run")
 print(g)
 
-# TODO graph flower population counts
+g <- ggplot(data=popCounts, aes(x=tick, y=Flower.Count, group=run, color=factor(run))) +
+  geom_line() +
+  ggtitle("Flower Populations") +
+  xlab("Tick") +
+  ylab("Flower Population") +
+  labs(color="Run")
+print(g)
+
+g <- ggplot(data=cumNectar, aes(x=tick, y=Cumulative.Nectar, group=run, color=factor(run))) +
+  geom_line() +
+  ggtitle("Cumulative Nectar Collected") +
+  xlab("Tick") +
+  ylab("Cumulative Nectar") +
+  labs(color="Run")
+print(g)

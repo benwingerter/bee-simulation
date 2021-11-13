@@ -1,6 +1,5 @@
-library(plyr)
+library(ggplot2)
 
-options(digits.secs = 3)
 popCounts <- read.csv('../population_counts.log', header = TRUE)
 nectarCollection <- read.csv('../nectar_collection.log', header = TRUE)
 cumNectar <- read.csv('../cumulative_nectar.log', header = TRUE)
