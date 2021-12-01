@@ -1,17 +1,21 @@
 library(ggplot2)
 
-popCounts <- read.csv('../population_counts.log', header = TRUE)
-nectarCollection <- read.csv('../nectar_collection.log', header = TRUE)
-cumNectar <- read.csv('../cumulative_nectar.log', header = TRUE)
+popCounts <-        read.csv('../population_counts.2021.Nov.20.14_09_33.log', header = TRUE)
+nectarCollection <- read.csv('../nectar_collection.2021.Nov.20.14_09_33.log', header = TRUE)
+cumNectar <-        read.csv('../cumulative_nectar.2021.Nov.20.14_09_33.log', header = TRUE)
 
 # Challenge: reading in the latest log file instead of all log files Do this later
 # strptime("2021.Nov.11.14_29_29", "%Y.%B.%d.%H_%M_%S")
 
-getLatestFile <- function(base, extension) {
-  # TODO automatically grab latest file
-  # matches <- grepl('population_counts', dir('..')) & grepl('.log', dir('..'))
-  # dir('..')[grepl('population_counts', dir('..')) & grepl('.log', dir('..'))]
-}
+# getLatestFile <- function(base, extension) {
+#   # TODO automatically grab latest file
+#   matches <- grepl('population_counts', dir('..')) & grepl('.log', dir('..'))
+#   files <- dir('..')[grepl('population_counts', dir('..')) & grepl('.log', dir('..'))]
+#   files <- substring(files, 19, 38)
+#   dates <- strptime(files, "%Y.%B.%d.%H_%M_%S")
+#   res <- sort(dates, decreasing = TRUE)
+#   return(res)
+# }
 
 pops <- seq(0:max(popCounts$Bee.Count))
 

@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import BeeSimulation.lib.BeeLogger;
 import BeeSimulation.lib.Coordinate;
 import BeeSimulation.lib.FlowerLocation;
 import BeeSimulation.lib.Params;
@@ -22,7 +21,6 @@ import org.apache.commons.math3.distribution.NormalDistribution;
 
 public class Bee {
 
-	private final static Logger LOGGER = BeeLogger.getLogger();
 	private final int sightRadius;
 	private final int id;
 	private final Grid<Object> grid;
@@ -300,15 +298,6 @@ public class Bee {
 					this.knownFlower = new FlowerLocation(x, y, flowerNectar, dist);
 				}
 			}
-
-			// Log
-			var template = "NECTAR FOUND\nBee: %d \nFlower: %d\nTick: %d\nBee Count: %d";
-			long tick = (long) RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
-			@SuppressWarnings("unchecked")
-			var context = (Context<Object>) ContextUtils.getContext(this);
-			Stream<Object> s = context.getObjectsAsStream(Bee.class);
-			long beeCnt = s.count();
-			LOGGER.info(String.format(template, id, flower.getId(), tick, beeCnt));
 		} else {
 			this.state = State.WANDER;
 			this.knownFlower = null;

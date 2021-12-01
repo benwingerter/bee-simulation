@@ -15,10 +15,7 @@ import repast.simphony.space.grid.SimpleGridAdder;
 import repast.simphony.space.grid.StickyBorders;
 
 import java.util.Random;
-import java.util.logging.Logger;
-import java.util.stream.Stream;
 
-import BeeSimulation.lib.BeeLogger;
 import BeeSimulation.lib.Params;
 
 /**
@@ -27,7 +24,6 @@ import BeeSimulation.lib.Params;
  */
 public class BeeSimulationContextBuilder extends DefaultContext<Object> implements ContextBuilder<Object> {
 
-	private final static Logger LOGGER = BeeLogger.getLogger();
 	private Context<Object> context;
 	private Grid<Object> grid;
 	private Random random;
@@ -140,13 +136,6 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 			context.add(flower);
 			grid.moveTo(flower, x, y); 
 		}
-	}
-	
-	public void logPop() {
-		var template = "POP LOG\nBee Count: %d";
-		Stream<Object> s = context.getObjectsAsStream(Bee.class);
-		long beeCnt = s.count();
-		LOGGER.info(String.format(template, beeCnt));
 	}
 
 }
