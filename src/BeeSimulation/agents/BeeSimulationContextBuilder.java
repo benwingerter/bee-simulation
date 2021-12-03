@@ -98,8 +98,6 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 		schedule.schedule(addFlower, this, "addFlower");
 		ScheduleParameters checkDone = ScheduleParameters.createRepeating(1, 1);
 		schedule.schedule(checkDone, this, "checkDone");
-		ScheduleParameters logPop = ScheduleParameters.createRepeating(1, 1);
-		schedule.schedule(logPop, this, "logPop");
 		return context;
 	}
 

@@ -16,7 +16,7 @@ import repast.simphony.space.grid.*;
 import repast.simphony.util.ContextUtils;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
-import org.apache.commons.math3.distribution.NormalDistribution;
+import repast.simphony.random.RandomHelper;
 
 public class Bee {
 
@@ -83,15 +83,16 @@ public class Bee {
 		var days1 = 26.6 * 60 * 60 * 24;
 		var days2 = 8.9 * 60 * 60 * 24;
 
-		var dist = new NormalDistribution(days1, days2);
+		var dist = RandomHelper.createNormal(days1, days2);
 
 		// Get seed
-		Parameters p = RunEnvironment.getInstance().getParameters();
-		var seed = (Integer) p.getValue(Params.RANDOM_SEED.getValue());
-
-		dist.reseedRandomGenerator(seed);
+//		Parameters p = RunEnvironment.getInstance().getParameters();
+//		var seed = (Integer) p.getValue(Params.RANDOM_SEED.getValue());
+//
+//		dist.reseedRandomGenerator(seed);
 		long tick = (long) RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
-		var prob = dist.cumulativeProbability(tick);
+		var prob = dist.cdf(tick);
+//		var prob = dist.cumulativeProbability(tick);
 		if (random.nextDouble() < prob) {
 			// Kill the bee
 			@SuppressWarnings("unchecked")

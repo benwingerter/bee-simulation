@@ -14,7 +14,7 @@
     <string>RStudio.home</string>
     <string>/Applications/RStudio.app</string>
     <string>LastLoadedScenario</string>
-    <string>/Users/benwingerter/eclipse-workspace/BeeSimulation/BeeSimulation.rs</string>
+    <string>BeeSimulation.rs</string>
     <string>SettingsFileName</string>
     <string>Repast.settings</string>
     <string>RStudio.licenseAccepted</string>
