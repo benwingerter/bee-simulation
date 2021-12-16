@@ -6,18 +6,10 @@
       <threshold>8</threshold>
     </default>
     <int>11</int>
-    <int>6</int>
+    <int>2</int>
     <string>SettingsRegistryId</string>
     <string>Repast.registry</string>
-    <string>RStudio.home.2.8.0</string>
-    <string>/Applications/RStudio.app</string>
-    <string>RStudio.home</string>
-    <string>/Applications/RStudio.app</string>
     <string>LastLoadedScenario</string>
-    <string>BeeSimulation.rs</string>
-    <string>SettingsFileName</string>
-    <string>Repast.settings</string>
-    <string>RStudio.licenseAccepted</string>
-    <boolean>true</boolean>
+    <string>/Users/benwingerter/engineering-stuff/eclipse-workspace/BeeSimulation/BeeSimulation.rs</string>
   </hashtable>
 </simphony.settings.SettingsRegistry>
