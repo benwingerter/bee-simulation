@@ -9,6 +9,7 @@ log_analysis/.Rhistory
 RHome
 bin/
 .temp
+Repast.settings
 
 # Compiled class file
 *.class
