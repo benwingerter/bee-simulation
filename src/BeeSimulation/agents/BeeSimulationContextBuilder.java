@@ -19,7 +19,8 @@ import java.util.Random;
 import BeeSimulation.lib.Params;
 
 /**
- * Builds the simulation context. This class is NOT re-instantiated when the model is reset
+ * Builds the simulation context. This class is NOT re-instantiated when the
+ * model is reset
  *
  */
 public class BeeSimulationContextBuilder extends DefaultContext<Object> implements ContextBuilder<Object> {
@@ -45,7 +46,7 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 	public Context<Object> build(Context<Object> context) {
 
 		this.context = context;
-		
+
 		ticks = 0;
 
 		context.setId("BeeSimulation");
@@ -125,14 +126,14 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 	 */
 	public void addFlower() {
 		if (random.nextDouble() < flowerRegenRate) {
-			int x,y;
+			int x, y;
 			do {
 				x = random.nextInt(gridWidth);
 				y = random.nextInt(gridHeight);
 			} while (x == hiveX && y == hiveY);
 			var flower = new Flower(random, ++flowerIdCntr, x, y);
 			context.add(flower);
-			grid.moveTo(flower, x, y); 
+			grid.moveTo(flower, x, y);
 		}
 	}
 

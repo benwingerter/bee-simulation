@@ -1,4 +1,4 @@
-<repast.simphony.data2.engine.DataSetDescriptor simphonyVersion="2.8.0">
+<repast.simphony.data2.engine.DataSetDescriptor simphonyVersion="2.9.0">
   <name>Nectar Count</name>
   <type>NON_AGGREGATE</type>
   <sourceType>BeeSimulation.agents.Bee</sourceType>

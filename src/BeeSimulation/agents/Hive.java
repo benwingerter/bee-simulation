@@ -2,12 +2,11 @@ package BeeSimulation.agents;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import BeeSimulation.lib.Params;
-import repast.simphony.context.Context;
+import BeeSimulation.userpanel.UserPanel;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.parameter.Parameters;
@@ -25,6 +24,8 @@ public class Hive {
 	private int cumulativeNectar;
 	private List<Bee> wagglers = new LinkedList<Bee>();
 	private int beeIdCntr;
+	private final double bearAttackProb;
+	private Optional<UserPanel> userPanel = Optional.empty();
 
 	public Hive(Grid<Object> grid, final int x, final int y, Random random) {
 		this.grid = grid;
@@ -34,29 +35,34 @@ public class Hive {
 		Parameters p = RunEnvironment.getInstance().getParameters();
 		beeIdCntr = (Integer) p.getValue(Params.NUM_BEES.getValue()) - 1;
 		beeCost = (Integer) p.getValue(Params.BEE_COST.getValue());
+		bearAttackProb = (Double) p.getValue(Params.BEAR_ATTACK_PROB.getValue());
 	}
 
-	@ScheduledMethod(start = 1, interval = 1, shuffle = true)
-	public void addBees() {
+	public void bearAttack() {
+		nectar = 0;
+	}
+
+	public long beeCount() {
 		@SuppressWarnings("unchecked")
-		var context = (Context<Object>) ContextUtils.getContext(this);
-		var r = random.nextDouble();
-		// Add bee randomly and if required nectar is available
-		if (r <= 0.01 && beeCost <= nectar) {
-			nectar -= beeCost;
-			var bee = new Bee(grid, random, ++beeIdCntr, x, y);
-			context.add(bee);
-			grid.moveTo(bee, x, y);
-		}
+		var context = ContextUtils.getContext(this);
+		return context.getObjectsAsStream(Bee.class).count();
+	}
+
+	public void deposit(int nectar) {
+		this.nectar += nectar;
+		this.cumulativeNectar += nectar;
+	}
+
+	public int getCumulativeNectar() {
+		return cumulativeNectar;
 	}
 
 	public int getNectar() {
 		return nectar;
 	}
 
-	public void deposit(int nectar) {
-		this.nectar += nectar;
-		this.cumulativeNectar += nectar;
+	public List<Bee> getWagglers() {
+		return wagglers;
 	}
 
 	public int getX() {
@@ -75,16 +81,30 @@ public class Hive {
 		wagglers.remove(bee);
 	}
 
-	public List<Bee> getWagglers() {
-		return wagglers;
+	public void registerPanel(UserPanel panel) {
+		this.userPanel = Optional.of(panel);
 	}
-	
-	public int getCumulativeNectar() {
-		return cumulativeNectar;
-	}
-	
-	public long beeCount() {
-		var context = (Context<Bee>) ContextUtils.getContext(this);
-		return context.getObjectsAsStream(Bee.class).count();
+
+	@ScheduledMethod(start = 1, interval = 1, shuffle = true)
+	public void step() {
+		@SuppressWarnings("unchecked")
+		var context = ContextUtils.getContext(this);
+
+		// Add Bees
+		var r = random.nextDouble();
+		// Add bee randomly and if required nectar is available
+		if (r <= 0.01 && beeCost <= nectar) {
+			nectar -= beeCost;
+			var bee = new Bee(grid, random, ++beeIdCntr, x, y);
+			context.add(bee);
+			grid.moveTo(bee, x, y);
+		}
+
+		// Bear Attack
+		if (random.nextDouble() < bearAttackProb) {
+			bearAttack();
+			userPanel.ifPresent(panel -> panel.logAttack());
+		}
+
 	}
 }

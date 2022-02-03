@@ -35,3 +35,5 @@ Repast.settings
 hs_err_pid*
 .Rproj.user
 /bin/
+.Rhistory
+BeeSimulation.Rproj

@@ -1,4 +1,4 @@
-<repast.simphony.chart2.engine.TimeSeriesChartDescriptor simphonyVersion="2.8.0">
+<repast.simphony.chart2.engine.TimeSeriesChartDescriptor simphonyVersion="2.9.0">
   <name>Cumulative Nectar</name>
   <dataSet>Cumulative Nectar Count</dataSet>
   <xAxisLabel>Tick</xAxisLabel>
