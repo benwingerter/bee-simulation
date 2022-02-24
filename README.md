@@ -3,4 +3,4 @@ Built for the [Council for Resilience Education](https://cre.unl.edu/) at the Un
 
 Download the [Repast Simphony IDE](https://repast.github.io/repast_simphony.html) to get started with this project.
 
-This project requires Java 8+
+This project requires Java 8+ to run
