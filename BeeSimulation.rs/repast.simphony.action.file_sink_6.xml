@@ -1,13 +1,13 @@
 <repast.simphony.data2.engine.FileSinkDescriptor simphonyVersion="2.9.0">
-  <name>Population Counts</name>
-  <dataSet>Flower and Bee Counts</dataSet>
+  <name>Nectar Collection</name>
+  <dataSet>Nectar Count</dataSet>
   <delimiter>,</delimiter>
   <format>TABULAR</format>
   <sourceIds class="linked-hash-set">
+    <string>foundNectar</string>
+    <string>Id</string>
     <string>tick</string>
-    <string>Flower Count</string>
-    <string>Bee Count</string>
   </sourceIds>
-  <fileName>population_counts.log</fileName>
+  <fileName>nectar_collection.log</fileName>
   <addTimeStamp>true</addTimeStamp>
 </repast.simphony.data2.engine.FileSinkDescriptor>

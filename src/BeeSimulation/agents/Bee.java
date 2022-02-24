@@ -10,11 +10,14 @@ import java.util.stream.Stream;
 import BeeSimulation.lib.Coordinate;
 import BeeSimulation.lib.FlowerLocation;
 import BeeSimulation.lib.Params;
+import cern.jet.random.Normal;
+import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.parameter.Parameters;
 import repast.simphony.random.RandomHelper;
 import repast.simphony.space.grid.Grid;
+import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
 
 public class Bee {
@@ -30,9 +33,9 @@ public class Bee {
 	 * @return The flower of the best dance
 	 */
 	private static FlowerLocation bestWaggle(List<Bee> wagglers) {
-		var best = wagglers.get(0).getKnownFlower();
+		FlowerLocation best = wagglers.get(0).getKnownFlower();
 		for (Bee bee : wagglers) {
-			var flower = bee.getKnownFlower();
+			FlowerLocation flower = bee.getKnownFlower();
 			if (flower.getScore() > best.getScore()) {
 				best = flower;
 			}
@@ -50,7 +53,7 @@ public class Bee {
 	 * @return the flower if exists
 	 */
 	private static List<Flower> getFlower(Grid<Object> grid, int x, int y, int radius) {
-		var<Object> objs = grid.getObjects();
+		Iterable<Object> objs = grid.getObjects();
 		List<Flower> flowers = new ArrayList<>();
 		for (Object obj : objs) {
 			if (obj instanceof Flower && Math
@@ -65,9 +68,9 @@ public class Bee {
 		// Move 10 steps in random direction
 		// Find a random angle
 
-		var slopeRad = Math.atan(Math.random() * 2 * Math.PI);
-		var newX = (int) (x + Math.cos(slopeRad) * 10);
-		var newY = (int) (x + Math.sin(slopeRad) * 10);
+		double slopeRad = Math.atan(Math.random() * 2 * Math.PI);
+		int newX = (int) (x + Math.cos(slopeRad) * 10);
+		int newY = (int) (x + Math.sin(slopeRad) * 10);
 
 		return new Coordinate(newX, newY);
 	}
@@ -120,7 +123,7 @@ public class Bee {
 				}
 			} else {
 				// Observe the best dance
-				var<Bee> wagglers = hive.getWagglers();
+				List<Bee> wagglers = hive.getWagglers();
 				if (wagglers.size() == 0) {
 					this.state = State.WANDER;
 				} else {
@@ -132,7 +135,7 @@ public class Bee {
 	}
 
 	private void exploit() {
-		var arrived = moveTowards(knownFlower.getX(), knownFlower.getY());
+		boolean arrived = moveTowards(knownFlower.getX(), knownFlower.getY());
 		if (arrived) {
 			handleAtFlower();
 		}
@@ -160,7 +163,7 @@ public class Bee {
 	 * @return the hive if exists
 	 */
 	private Optional<Hive> getHive(Grid<Object> grid, int x, int y) {
-		var<Hive> context = ContextUtils.getContext(this);
+		Context<Hive> context = ContextUtils.getContext(this);
 		Stream<Hive> s = context.getObjectsAsStream(Hive.class);
 		List<Hive> hives = s.filter(h -> {
 			return h.getX() == x && h.getY() == y;
@@ -189,21 +192,21 @@ public class Bee {
 	 * @return Whether the bee is at a flower
 	 */
 	private boolean handleAtFlower() {
-		var location = grid.getLocation(this);
-		var x = location.getX();
-		var y = location.getY();
+		GridPoint location = grid.getLocation(this);
+		int x = location.getX();
+		int y = location.getY();
 
-		var flowers = getFlower(grid, x, y, 0);
+		List<Flower> flowers = getFlower(grid, x, y, 0);
 		if (!flowers.isEmpty()) {
 			this.foundNectarTick = (long) RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
-			var flower = flowers.get(0);
+			Flower flower = flowers.get(0);
 			this.state = State.RETURN_TO_HIVE;
-			var flowerNectar = flower.nectarContent();
+			int flowerNectar = flower.nectarContent();
 			if (flowerNectar > 0) {
 				nectar += flower.grabNectar();
 				if (--flowerNectar > 0) {
 					// save the Flower
-					var dist = Math.sqrt(Math.pow(hiveX - x, 2) + Math.pow(hiveY - y, 2));
+					double dist = Math.sqrt(Math.pow(hiveX - x, 2) + Math.pow(hiveY - y, 2));
 					this.knownFlower = new FlowerLocation(x, y, flowerNectar, dist);
 				}
 			}
@@ -217,13 +220,13 @@ public class Bee {
 	private void jump() {
 		jumpCount++;
 
-		var location = grid.getLocation(this);
-		var x = location.getX();
-		var y = location.getY();
+		GridPoint location = grid.getLocation(this);
+		int x = location.getX();
+		int y = location.getY();
 
 		// Save a new jump to location if necessary
-		if (jumpTo.isEmpty()) {
-			var moved = false;
+		if (!jumpTo.isPresent()) {
+			boolean moved = false;
 			do {
 				// this needs to be saved.
 				this.jumpTo = Optional.of(jumpPosition(x, y));
@@ -231,27 +234,27 @@ public class Bee {
 			} while (!moved);
 		}
 
-		var moveTo = jumpTo.get();
+		Coordinate moveTo = jumpTo.get();
 
 		// Move towards there
 		// No need to check for out-of-grid
-		var diffX = moveTo.getX() - x;
+		int diffX = moveTo.getX() - x;
 		if (diffX > 0) {
 			grid.moveByDisplacement(this, 1, 0);
 		} else if (diffX < 0) {
 			grid.moveByDisplacement(this, -1, 0);
 		}
 
-		var diffY = moveTo.getY() - y;
+		int diffY = moveTo.getY() - y;
 		if (diffY > 0) {
 			grid.moveByDisplacement(this, 0, 1);
 		} else if (diffX < 0) {
 			grid.moveByDisplacement(this, 0, -1);
 		}
 		// Stop jumping if not moved
-		var newLocation = grid.getLocation(this);
-		var newX = newLocation.getX();
-		var newY = newLocation.getY();
+		GridPoint newLocation = grid.getLocation(this);
+		int newX = newLocation.getX();
+		int newY = newLocation.getY();
 
 		// End jumping if the edge was reached or persistence is exceeded
 		if ((jumpCount == jumpPersistence) || (newX == x && newY == y)) {
@@ -264,11 +267,11 @@ public class Bee {
 	}
 
 	private boolean moveTowards(int destX, int destY) {
-		var location = grid.getLocation(this);
-		var x = location.getX();
-		var y = location.getY();
+		GridPoint location = grid.getLocation(this);
+		int x = location.getX();
+		int y = location.getY();
 
-		var diffX = destX - x;
+		int diffX = destX - x;
 		if (diffX > 0) {
 			// Move right
 			x++;
@@ -278,7 +281,7 @@ public class Bee {
 			x--;
 			grid.moveByDisplacement(this, -1, 0);
 		}
-		var diffY = destY - y;
+		int diffY = destY - y;
 		if (diffY > 0) {
 			// Move up
 			y++;
@@ -294,12 +297,12 @@ public class Bee {
 	}
 
 	private void moveTowardsHive() {
-		var arrived = moveTowards(hiveX, hiveY);
+		boolean arrived = moveTowards(hiveX, hiveY);
 		if (arrived) {
 			state = State.DEPOSIT_NECTAR;
-			var optHive = getHive(grid, hiveX, hiveY);
+			Optional<Hive> optHive = getHive(grid, hiveX, hiveY);
 			if (optHive.isPresent()) {
-				final var hive = optHive.get();
+				Hive hive = optHive.get();
 				hive.deposit(nectar);
 				nectar = 0;
 			}
@@ -316,17 +319,17 @@ public class Bee {
 		// of Honey Bee Colony Population Dynamics. PLoS ONE 6(4): e18491. doi:10.1371/
 		// journal.pone.0018491
 		// Grid size: 6.5m
-		var days1 = 26.6 * 60 * 60 * 24;
-		var days2 = 8.9 * 60 * 60 * 24;
+		double days1 = 26.6 * 60 * 60 * 24;
+		double days2 = 8.9 * 60 * 60 * 24;
 
-		var dist = RandomHelper.createNormal(days1, days2);
+		Normal dist = RandomHelper.createNormal(days1, days2);
 
 		// Get seed
 		long tick = (long) RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
-		var prob = dist.cdf(tick);
+		double prob = dist.cdf(tick);
 		if (random.nextDouble() < prob) {
 			// Kill the bee
-			var<Hive> context = ContextUtils.getContext(this);
+			Context<Hive> context = ContextUtils.getContext(this);
 			context.remove(this);
 			alive = false;
 			return;
@@ -364,7 +367,7 @@ public class Bee {
 
 		} else {
 			// Move to random direction, see if there is honey, if so, pick it up
-			var direction = random.nextInt(4);
+			int direction = random.nextInt(4);
 			switch (direction) {
 			case 0:
 				// Move up
@@ -384,19 +387,19 @@ public class Bee {
 				break;
 			}
 
-			var atFlower = handleAtFlower();
+			boolean atFlower = handleAtFlower();
 			if (!atFlower) {
 				// Look for nearby flowers
-				var location = grid.getLocation(this);
-				var x = location.getX();
-				var y = location.getY();
-				var flowers = getFlower(grid, x, y, sightRadius);
+				GridPoint location = grid.getLocation(this);
+				int x = location.getX();
+				int y = location.getY();
+				List<Flower> flowers = getFlower(grid, x, y, sightRadius);
 				if (!flowers.isEmpty()) {
 					// Get the nearest flower
-					var closest = flowers.get(0);
+					Flower closest = flowers.get(0);
 					int closestDist = Integer.MAX_VALUE;
 					for (Flower flower : flowers) {
-						var dist = Math.sqrt(Math.pow(closest.getX() - x, 2) + Math.pow(closest.getY() - y, 2));
+						double dist = Math.sqrt(Math.pow(closest.getX() - x, 2) + Math.pow(closest.getY() - y, 2));
 						// If flower is closer, save it
 						if (dist < closestDist) {
 							closest = flower;

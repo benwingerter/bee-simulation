@@ -26,10 +26,10 @@ public class UserPanel implements UserPanelCreator {
 
 	@Override
 	public JPanel createPanel() {
-		var panel = new JPanel();
+		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		var bearButton = new JButton("Bear Attack");
-		var label = new JLabel("Bear Attack Log (ticks)");
+		JButton bearButton = new JButton("Bear Attack");
+		JLabel label = new JLabel("Bear Attack Log (ticks)");
 		list = Optional.of(new JList<Long>(listModel));
 
 		RunEnvironment.getInstance().addRunListener(new RunListener() {

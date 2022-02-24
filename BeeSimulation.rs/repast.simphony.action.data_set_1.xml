@@ -1,5 +1,5 @@
 <repast.simphony.data2.engine.DataSetDescriptor simphonyVersion="2.9.0">
-  <name>Flower Count</name>
+  <name>Bee Count</name>
   <type>AGGREGATE</type>
   <inclTick>true</inclTick>
   <inclBatchRun>false</inclBatchRun>
@@ -17,10 +17,10 @@
   <methodDataSources class="linked-hash-map"/>
   <countSources class="linked-hash-map">
     <entry>
-      <string>Flower Count</string>
+      <string>Bee Count</string>
       <repast.simphony.data2.engine.CountSourceDefinition>
-        <typeName>BeeSimulation.agents.Flower</typeName>
-        <id>Flower Count</id>
+        <typeName>BeeSimulation.agents.Bee</typeName>
+        <id>Bee Count</id>
       </repast.simphony.data2.engine.CountSourceDefinition>
     </entry>
   </countSources>

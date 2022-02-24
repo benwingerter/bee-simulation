@@ -1,0 +1,3 @@
+A multi-agent bee colony simulation.
+
+Built for the Council for Resilience Education at the University of Nebraska.

@@ -22,4 +22,4 @@ CP=$CP:lib/*
 cd "BeeSimulation"
 
 # Start the Model
-java -XX:+IgnoreUnrecognizedVMOptions --add-modules=ALL-SYSTEM --add-exports=java.base/jdk.internal.ref=ALL-UNNAMED -cp "$CP" repast.simphony.runtime.RepastMain  "./BeeSimulation.rs"
+java -XX:+IgnoreUnrecognizedVMOptions --add-modules=ALL-SYSTEM --add-exports=java.base/jdk.internal.ref=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.base/java.text=ALL-UNNAMED --add-opens java.desktop/java.awt.font=ALL-UNNAMED -cp "$CP" repast.simphony.runtime.RepastMain  "./BeeSimulation.rs"

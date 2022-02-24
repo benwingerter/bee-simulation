@@ -57,9 +57,9 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 		gridHeight = (Integer) p.getValue(Params.GRID_HEIGHT.getValue());
 		flowerRegenRate = (Double) p.getValue(Params.FLOWER_REGEN_RATE.getValue());
 		maxTicks = (Integer) p.getValue(Params.MAX_TICKS.getValue());
-		var numBees = (Integer) p.getValue(Params.NUM_BEES.getValue());
-		var flowerDensity = (Double) p.getValue(Params.FLOWER_DENSITY.getValue());
-		var seed = (Integer) p.getValue(Params.RANDOM_SEED.getValue());
+		int numBees = (Integer) p.getValue(Params.NUM_BEES.getValue());
+		double flowerDensity = (Double) p.getValue(Params.FLOWER_DENSITY.getValue());
+		int seed = (Integer) p.getValue(Params.RANDOM_SEED.getValue());
 
 		// Setup
 		random = new Random(seed);
@@ -76,7 +76,7 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 
 		// Add bees
 		for (beeIdCntr = 0; beeIdCntr < numBees; beeIdCntr++) {
-			var bee = new Bee(grid, random, beeIdCntr, hiveX, hiveY);
+			Bee bee = new Bee(grid, random, beeIdCntr, hiveX, hiveY);
 			context.add(bee);
 			grid.moveTo(bee, hiveX, hiveY);
 		}
@@ -84,9 +84,9 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 		// Add flowers
 		for (int i = 0; i < gridHeight; i++) {
 			for (int j = 0; j < gridWidth; j++) {
-				var r = random.nextDouble();
+				double r = random.nextDouble();
 				if (r < flowerDensity && i != hiveY && j != hiveX) {
-					var flower = new Flower(random, ++flowerIdCntr, j, i);
+					Flower flower = new Flower(random, ++flowerIdCntr, j, i);
 					context.add(flower);
 					grid.moveTo(flower, j, i);
 				}
@@ -108,7 +108,7 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 	public void checkDone() {
 		ticks++;
 		// loop through all bees and see if any are still alive.
-		var objs = grid.getObjects();
+		Iterable<Object> objs = grid.getObjects();
 		boolean bees = false;
 		for (Object obj : objs) {
 			if (obj instanceof Bee) {
@@ -131,7 +131,7 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 				x = random.nextInt(gridWidth);
 				y = random.nextInt(gridHeight);
 			} while (x == hiveX && y == hiveY);
-			var flower = new Flower(random, ++flowerIdCntr, x, y);
+			Flower flower = new Flower(random, ++flowerIdCntr, x, y);
 			context.add(flower);
 			grid.moveTo(flower, x, y);
 		}

@@ -7,6 +7,7 @@ import java.util.Random;
 
 import BeeSimulation.lib.Params;
 import BeeSimulation.userpanel.UserPanel;
+import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.parameter.Parameters;
@@ -43,8 +44,7 @@ public class Hive {
 	}
 
 	public long beeCount() {
-		@SuppressWarnings("unchecked")
-		var context = ContextUtils.getContext(this);
+		Context context = ContextUtils.getContext(this);
 		return context.getObjectsAsStream(Bee.class).count();
 	}
 
@@ -87,15 +87,14 @@ public class Hive {
 
 	@ScheduledMethod(start = 1, interval = 1, shuffle = true)
 	public void step() {
-		@SuppressWarnings("unchecked")
-		var context = ContextUtils.getContext(this);
+		Context context = ContextUtils.getContext(this);
 
 		// Add Bees
-		var r = random.nextDouble();
+		double r = random.nextDouble();
 		// Add bee randomly and if required nectar is available
 		if (r <= 0.01 && beeCost <= nectar) {
 			nectar -= beeCost;
-			var bee = new Bee(grid, random, ++beeIdCntr, x, y);
+			Bee bee = new Bee(grid, random, ++beeIdCntr, x, y);
 			context.add(bee);
 			grid.moveTo(bee, x, y);
 		}

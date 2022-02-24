@@ -3,6 +3,7 @@ package BeeSimulation.agents;
 import java.util.Random;
 
 import BeeSimulation.lib.Params;
+import cern.jet.random.engine.RandomEngine;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
@@ -34,10 +35,10 @@ public class Flower {
 	@ScheduledMethod(start = 1, interval = 1, shuffle = true)
 	public void step() {
 		// Random Pesticide Drift
-		var dist = RandomHelper.getGenerator();
+		RandomEngine dist = RandomHelper.getGenerator();
 		if (dist.nextDouble() < pesticideDriftProb) {
 			@SuppressWarnings("unchecked")
-			var context = (Context<Object>) ContextUtils.getContext(this);
+			Context context = (Context<Object>) ContextUtils.getContext(this);
 			context.remove(this);
 			nectar = 0;
 		}

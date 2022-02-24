@@ -1,5 +1,5 @@
 <repast.simphony.data2.engine.DataSetDescriptor simphonyVersion="2.9.0">
-  <name>Flower and Bee Counts</name>
+  <name>Flower Count</name>
   <type>AGGREGATE</type>
   <inclTick>true</inclTick>
   <inclBatchRun>false</inclBatchRun>
@@ -11,7 +11,7 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>966661717</hashCode>
+    <hashCode>-1898848294</hashCode>
   </scheduleParams>
   <atEnd>true</atEnd>
   <methodDataSources class="linked-hash-map"/>
@@ -21,13 +21,6 @@
       <repast.simphony.data2.engine.CountSourceDefinition>
         <typeName>BeeSimulation.agents.Flower</typeName>
         <id>Flower Count</id>
-      </repast.simphony.data2.engine.CountSourceDefinition>
-    </entry>
-    <entry>
-      <string>Bee Count</string>
-      <repast.simphony.data2.engine.CountSourceDefinition>
-        <typeName>BeeSimulation.agents.Bee</typeName>
-        <id>Bee Count</id>
       </repast.simphony.data2.engine.CountSourceDefinition>
     </entry>
   </countSources>
