@@ -10,12 +10,10 @@ import java.util.stream.Stream;
 import BeeSimulation.lib.Coordinate;
 import BeeSimulation.lib.FlowerLocation;
 import BeeSimulation.lib.Params;
-import cern.jet.random.Normal;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.parameter.Parameters;
-import repast.simphony.random.RandomHelper;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
@@ -76,6 +74,7 @@ public class Bee {
 	}
 
 	private final int sightRadius;
+	private final double deathProb;
 	private final int id;
 	private final Grid<Object> grid;
 	private final Random random;
@@ -106,6 +105,7 @@ public class Bee {
 		this.hiveY = hiveY;
 		Parameters p = RunEnvironment.getInstance().getParameters();
 		sightRadius = (Integer) p.getValue(Params.SIGHT_RADIUS.getValue());
+		deathProb = (Double) p.getValue(Params.DEATH_PROB.getValue());
 	}
 
 	private void atHive() {
@@ -314,20 +314,8 @@ public class Bee {
 		if (!alive) {
 			return;
 		}
-
-		// Adapted from Khoury DS, Myerscough MR, Barron AB (2011) A Quantitative Model
-		// of Honey Bee Colony Population Dynamics. PLoS ONE 6(4): e18491. doi:10.1371/
-		// journal.pone.0018491
-		// Grid size: 6.5m
-		double days1 = 26.6 * 60 * 60 * 24;
-		double days2 = 8.9 * 60 * 60 * 24;
-
-		Normal dist = RandomHelper.createNormal(days1, days2);
-
-		// Get seed
-		long tick = (long) RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
-		double prob = dist.cdf(tick);
-		if (random.nextDouble() < prob) {
+		
+		if (random.nextDouble() < deathProb) {
 			// Kill the bee
 			Context<Hive> context = ContextUtils.getContext(this);
 			context.remove(this);
