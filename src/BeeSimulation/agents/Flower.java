@@ -38,7 +38,7 @@ public class Flower {
 		RandomEngine dist = RandomHelper.getGenerator();
 		if (dist.nextDouble() < pesticideDriftProb) {
 			@SuppressWarnings("unchecked")
-			Context context = (Context<Object>) ContextUtils.getContext(this);
+			Context<Flower> context = (Context<Flower>) ContextUtils.getContext(this);
 			context.remove(this);
 			nectar = 0;
 		}

@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.Random;
 
 import BeeSimulation.lib.Params;
-import BeeSimulation.userpanel.UserPanel;
+import BeeSimulation.userpanel.EventConsumer;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
@@ -26,7 +26,7 @@ public class Hive {
 	private List<Bee> wagglers = new LinkedList<Bee>();
 	private int beeIdCntr;
 	private final double bearAttackProb;
-	private Optional<UserPanel> userPanel = Optional.empty();
+	private Optional<EventConsumer> userPanel = Optional.empty();
 
 	public Hive(Grid<Object> grid, final int x, final int y, Random random) {
 		this.grid = grid;
@@ -44,7 +44,8 @@ public class Hive {
 	}
 
 	public long beeCount() {
-		Context context = ContextUtils.getContext(this);
+		@SuppressWarnings("unchecked")
+		Context<Hive> context = (Context<Hive>) ContextUtils.getContext(this);
 		return context.getObjectsAsStream(Bee.class).count();
 	}
 
@@ -81,13 +82,14 @@ public class Hive {
 		wagglers.remove(bee);
 	}
 
-	public void registerPanel(UserPanel panel) {
+	public void registerPanel(EventConsumer panel) {
 		this.userPanel = Optional.of(panel);
 	}
 
 	@ScheduledMethod(start = 1, interval = 1, shuffle = true)
 	public void step() {
-		Context context = ContextUtils.getContext(this);
+		@SuppressWarnings("unchecked")
+		Context<Bee> context = (Context<Bee>)ContextUtils.getContext(this);
 
 		// Add Bees
 		double r = random.nextDouble();
@@ -102,7 +104,7 @@ public class Hive {
 		// Bear Attack
 		if (random.nextDouble() < bearAttackProb) {
 			bearAttack();
-			userPanel.ifPresent(panel -> panel.logAttack());
+			userPanel.ifPresent(panel -> panel.logEvent());
 		}
 
 	}

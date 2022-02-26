@@ -45,6 +45,9 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 	 */
 	public Context<Object> build(Context<Object> context) {
 
+		// Currently, multiple agent types are being stored in the same context. This
+		// would ideally be solved using nested contexts or Projections. Solving it
+		// would resolve some type checking issues.
 		this.context = context;
 
 		ticks = 0;

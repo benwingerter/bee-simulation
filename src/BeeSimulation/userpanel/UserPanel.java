@@ -18,7 +18,7 @@ import repast.simphony.engine.environment.RunListener;
 import repast.simphony.engine.environment.RunState;
 import repast.simphony.userpanel.ui.UserPanelCreator;
 
-public class UserPanel implements UserPanelCreator {
+public class UserPanel implements UserPanelCreator, EventConsumer {
 
 	private Optional<Hive> hive = Optional.empty();
 	private Optional<JList<Long>> list = Optional.empty();
@@ -52,7 +52,7 @@ public class UserPanel implements UserPanelCreator {
 				Context<Hive> context = RunState.getInstance().getMasterContext();
 				Stream<Hive> s = context.getObjectsAsStream(Hive.class);
 				hive = Optional.of(s.findFirst().get());
-				hive.get().registerPanel(UserPanel.this);
+//				hive.get().registerPanel(UserPanel.this);
 			}
 
 			@Override
@@ -68,7 +68,7 @@ public class UserPanel implements UserPanelCreator {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				UserPanel.this.hive.ifPresent(hive -> hive.bearAttack());
-				logAttack();
+				logEvent();
 			}
 
 		});
@@ -78,7 +78,7 @@ public class UserPanel implements UserPanelCreator {
 		return panel;
 	}
 
-	public void logAttack() {
+	public void logEvent() {
 		long tick = (long) RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
 		listModel.add(tick);
 	}

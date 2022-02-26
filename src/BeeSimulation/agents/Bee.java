@@ -163,7 +163,8 @@ public class Bee {
 	 * @return the hive if exists
 	 */
 	private Optional<Hive> getHive(Grid<Object> grid, int x, int y) {
-		Context<Hive> context = ContextUtils.getContext(this);
+		@SuppressWarnings("unchecked")
+		Context<Hive> context = (Context<Hive>) ContextUtils.getContext(this);
 		Stream<Hive> s = context.getObjectsAsStream(Hive.class);
 		List<Hive> hives = s.filter(h -> {
 			return h.getX() == x && h.getY() == y;
@@ -314,10 +315,11 @@ public class Bee {
 		if (!alive) {
 			return;
 		}
-		
+
 		if (random.nextDouble() < deathProb) {
 			// Kill the bee
-			Context<Hive> context = ContextUtils.getContext(this);
+			@SuppressWarnings("unchecked")
+			Context<Bee> context = (Context<Bee>) ContextUtils.getContext(this);
 			context.remove(this);
 			alive = false;
 			return;
