@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <parameters>
+	<!-- The Repast GUI displays these in alphabetical order -->
+
 	<parameter name="randomSeed" displayName="Random Seed"
 		type="int" defaultValue="32" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
@@ -18,6 +20,11 @@
 
 	<parameter name="numBees"
 		displayName="Initial Bee Population" type="int" defaultValue="10"
+		isReadOnly="false"
+		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
+
+	<parameter name="nectarPerFlower"
+		displayName="Nectar Per Flower" type="int" defaultValue="3"
 		isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
 

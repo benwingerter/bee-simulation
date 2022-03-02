@@ -44,6 +44,8 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 	 * @return the created context
 	 */
 	public Context<Object> build(Context<Object> context) {
+		
+		System.out.println("Building Context");
 
 		// Currently, multiple agent types are being stored in the same context. This
 		// would ideally be solved using nested contexts or Projections. Solving it
@@ -89,7 +91,7 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 			for (int j = 0; j < gridWidth; j++) {
 				double r = random.nextDouble();
 				if (r < flowerDensity && i != hiveY && j != hiveX) {
-					Flower flower = new Flower(random, ++flowerIdCntr, j, i);
+					Flower flower = new Flower(++flowerIdCntr, j, i);
 					context.add(flower);
 					grid.moveTo(flower, j, i);
 				}
@@ -134,7 +136,7 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 				x = random.nextInt(gridWidth);
 				y = random.nextInt(gridHeight);
 			} while (x == hiveX && y == hiveY);
-			Flower flower = new Flower(random, ++flowerIdCntr, x, y);
+			Flower flower = new Flower(++flowerIdCntr, x, y);
 			context.add(flower);
 			grid.moveTo(flower, x, y);
 		}

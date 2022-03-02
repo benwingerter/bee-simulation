@@ -1,7 +1,5 @@
 package BeeSimulation.agents;
 
-import java.util.Random;
-
 import BeeSimulation.lib.Params;
 import cern.jet.random.engine.RandomEngine;
 import repast.simphony.context.Context;
@@ -19,13 +17,13 @@ public class Flower {
 	private int y;
 	private final double pesticideDriftProb;
 
-	public Flower(Random random, int id, int x, int y) {
-		this.nectar = random.nextInt(5) + 1;
+	public Flower(int id, int x, int y) {
 		this.x = x;
 		this.y = y;
 		this.id = id;
 		Parameters p = RunEnvironment.getInstance().getParameters();
 		pesticideDriftProb = (Double) p.getValue(Params.PESTICIDE_DRIFT_PROB.getValue());
+		this.nectar = (Integer) p.getValue(Params.NECTAR_PER_FLOWER.getValue());
 	}
 
 	public int getId() {
