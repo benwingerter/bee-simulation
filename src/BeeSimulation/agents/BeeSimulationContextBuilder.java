@@ -13,8 +13,10 @@ import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridBuilderParameters;
 import repast.simphony.space.grid.SimpleGridAdder;
 import repast.simphony.space.grid.StickyBorders;
+import repast.simphony.random.RandomHelper;
 
-import java.util.Random;
+import java.util.stream.IntStream;
+import java.util.stream.StreamSupport;
 
 import BeeSimulation.lib.Params;
 
@@ -27,7 +29,6 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 
 	private Context<Object> context;
 	private Grid<Object> grid;
-	private Random random;
 	private int hiveX;
 	private int hiveY;
 	private int gridWidth;
@@ -36,7 +37,6 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 	private int beeIdCntr;
 	private int flowerIdCntr = -1;
 	private double flowerRegenRate;
-	private long ticks = 0;
 
 	/**
 	 * Setup the simulation context
@@ -44,15 +44,13 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 	 * @return the created context
 	 */
 	public Context<Object> build(Context<Object> context) {
-		
+
 		System.out.println("Building Context");
 
 		// Currently, multiple agent types are being stored in the same context. This
 		// would ideally be solved using nested contexts or Projections. Solving it
 		// would resolve some type checking issues.
 		this.context = context;
-
-		ticks = 0;
 
 		context.setId("BeeSimulation");
 		Parameters p = RunEnvironment.getInstance().getParameters();
@@ -66,37 +64,37 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 		double flowerDensity = (Double) p.getValue(Params.FLOWER_DENSITY.getValue());
 		int seed = (Integer) p.getValue(Params.RANDOM_SEED.getValue());
 
+		RandomHelper.setSeed(seed);
+
 		// Setup
-		random = new Random(seed);
 		GridFactory gridFactory = GridFactoryFinder.createGridFactory(null);
 		grid = gridFactory.createGrid("Grid", context, new GridBuilderParameters<Object>(new StickyBorders(),
 				new SimpleGridAdder<Object>(), true, gridWidth, gridHeight));
 
 		// Add hive
-		hiveX = random.nextInt(gridWidth);
-		hiveY = random.nextInt(gridHeight);
-		Hive hive = new Hive(grid, hiveX, hiveY, random);
+		hiveX = RandomHelper.nextIntFromTo(0, gridWidth - 1);
+		hiveY = RandomHelper.nextIntFromTo(0, gridHeight - 1);
+		Hive hive = new Hive(grid, hiveX, hiveY);
 		context.add(hive);
 		grid.moveTo(hive, hiveX, hiveY);
 
 		// Add bees
-		for (beeIdCntr = 0; beeIdCntr < numBees; beeIdCntr++) {
-			Bee bee = new Bee(grid, random, beeIdCntr, hiveX, hiveY);
+		IntStream.range(0, numBees - 1).forEach(beeCounter -> {
+			Bee bee = new Bee(grid, beeIdCntr, hiveX, hiveY);
 			context.add(bee);
 			grid.moveTo(bee, hiveX, hiveY);
-		}
+		});
 
 		// Add flowers
-		for (int i = 0; i < gridHeight; i++) {
-			for (int j = 0; j < gridWidth; j++) {
-				double r = random.nextDouble();
-				if (r < flowerDensity && i != hiveY && j != hiveX) {
-					Flower flower = new Flower(++flowerIdCntr, j, i);
+		IntStream.range(0, gridHeight).forEach(row -> {
+			IntStream.range(0, gridWidth).forEach(column -> {
+				if (RandomHelper.nextDouble() < flowerDensity && row != hiveY && column != hiveX) {
+					Flower flower = new Flower(++flowerIdCntr, column, row);
 					context.add(flower);
-					grid.moveTo(flower, j, i);
+					grid.moveTo(flower, column, row);
 				}
-			}
-		}
+			});
+		});
 
 		// Setup scheduled methods
 		ISchedule schedule = RunEnvironment.getInstance().getCurrentSchedule();
@@ -104,6 +102,9 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 		schedule.schedule(addFlower, this, "addFlower");
 		ScheduleParameters checkDone = ScheduleParameters.createRepeating(1, 1);
 		schedule.schedule(checkDone, this, "checkDone");
+
+		System.out.println("Context Built");
+
 		return context;
 	}
 
@@ -111,17 +112,12 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 	 * Terminate the simulation if it is finished
 	 */
 	public void checkDone() {
-		ticks++;
 		// loop through all bees and see if any are still alive.
 		Iterable<Object> objs = grid.getObjects();
-		boolean bees = false;
-		for (Object obj : objs) {
-			if (obj instanceof Bee) {
-				bees = true;
-				break;
-			}
-		}
-		if (!bees || maxTicks <= ticks) {
+		boolean isExtinct = StreamSupport.stream(objs.spliterator(), false).allMatch(obj -> !(obj instanceof Bee));
+
+		double tick = RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
+		if (isExtinct || maxTicks <= tick) {
 			RunEnvironment.getInstance().endRun();
 		}
 	}
@@ -130,12 +126,9 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 	 * Dynamically add flowers during runtime
 	 */
 	public void addFlower() {
-		if (random.nextDouble() < flowerRegenRate) {
-			int x, y;
-			do {
-				x = random.nextInt(gridWidth);
-				y = random.nextInt(gridHeight);
-			} while (x == hiveX && y == hiveY);
+		if (RandomHelper.nextDouble() < flowerRegenRate) {
+			int x = RandomHelper.nextIntFromTo(0, gridWidth - 1);
+			int y = RandomHelper.nextIntFromTo(0, gridHeight - 1);
 			Flower flower = new Flower(++flowerIdCntr, x, y);
 			context.add(flower);
 			grid.moveTo(flower, x, y);

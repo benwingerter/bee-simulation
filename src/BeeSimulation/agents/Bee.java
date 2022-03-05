@@ -3,7 +3,6 @@ package BeeSimulation.agents;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -17,6 +16,7 @@ import repast.simphony.parameter.Parameters;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
+import repast.simphony.random.RandomHelper;
 
 public class Bee {
 
@@ -77,7 +77,6 @@ public class Bee {
 	private final double deathProb;
 	private final int id;
 	private final Grid<Object> grid;
-	private final Random random;
 	private final int wanderThreshold = 10;
 	private final int wagglePersistence = 3;
 	private final int jumpPersistence = 10;
@@ -97,10 +96,9 @@ public class Bee {
 
 	private boolean alive = true;
 
-	public Bee(Grid<Object> grid, Random random, int id, int hiveX, int hiveY) {
+	public Bee(Grid<Object> grid, int id, int hiveX, int hiveY) {
 		this.id = id;
 		this.grid = grid;
-		this.random = random;
 		this.hiveX = hiveX;
 		this.hiveY = hiveY;
 		Parameters p = RunEnvironment.getInstance().getParameters();
@@ -142,7 +140,8 @@ public class Bee {
 	}
 
 	/**
-	 * TODO
+	 * Indicates whether nectar was found during the current tick. This is used by
+	 * the Repast logging tool.
 	 *
 	 * @return if nectar was found during this tick
 	 */
@@ -227,12 +226,7 @@ public class Bee {
 
 		// Save a new jump to location if necessary
 		if (!jumpTo.isPresent()) {
-			boolean moved = false;
-			do {
-				// this needs to be saved.
-				this.jumpTo = Optional.of(jumpPosition(x, y));
-
-			} while (!moved);
+			this.jumpTo = Optional.of(jumpPosition(x, y));
 		}
 
 		Coordinate moveTo = jumpTo.get();
@@ -267,36 +261,51 @@ public class Bee {
 
 	}
 
-	private boolean moveTowards(int destX, int destY) {
+	/**
+	 * Move the bee towards a location. The bee can up one unit in the cardinal
+	 * directions or diagonally.
+	 * 
+	 * @param xDestination Destination x coordinate
+	 * @param yDestination Destination y coordinate
+	 * @return The bee has arrived to the destination
+	 */
+	private boolean moveTowards(int xDestination, int yDestination) {
 		GridPoint location = grid.getLocation(this);
 		int x = location.getX();
 		int y = location.getY();
 
-		int diffX = destX - x;
-		if (diffX > 0) {
-			// Move right
-			x++;
-			grid.moveByDisplacement(this, 1, 0);
-		} else if (diffX < 0) {
-			// Move left
-			x--;
-			grid.moveByDisplacement(this, -1, 0);
-		}
-		int diffY = destY - y;
-		if (diffY > 0) {
-			// Move up
-			y++;
-			grid.moveByDisplacement(this, 0, 1);
-		} else if (diffY < 0) {
-			// Move down
-			y--;
-			grid.moveByDisplacement(this, 0, -1);
+		int xDifference = xDestination - x;
+		int yDifference = yDestination - y;
+
+		int yDirection = yDifference > 0 ? 1 : -1;
+		int xDirection = xDifference > 0 ? 1 : -1;
+
+		if (xDifference == 0) {
+			// move up or down
+			grid.moveByDisplacement(this, 0, yDirection);
+		} else {
+			double absoluteSlope = Math.abs(yDifference / (double) xDifference);
+			double degreesToDestination = Math.atan(absoluteSlope);
+			if (degreesToDestination < Math.PI / 8) {
+				x += xDirection;
+				grid.moveByDisplacement(this, xDirection, 0);
+			} else if (degreesToDestination < 3 * Math.PI / 8) {
+				x += xDirection;
+				y += yDirection;
+				grid.moveByDisplacement(this, xDirection, yDirection);
+			} else {
+				y += yDirection;
+				grid.moveByDisplacement(this, 0, yDirection);
+			}
 		}
 
 		// Check if the cell is the destination
-		return x == destX && y == destY;
+		return x == xDestination && y == yDestination;
 	}
 
+	/**
+	 * Move towards the hive
+	 */
 	private void moveTowardsHive() {
 		boolean arrived = moveTowards(hiveX, hiveY);
 		if (arrived) {
@@ -310,13 +319,16 @@ public class Bee {
 		}
 	}
 
+	/**
+	 * Method that gets called on every tick increment that handles bee behavior
+	 */
 	@ScheduledMethod(start = 1, interval = 1, shuffle = true)
 	public void step() {
 		if (!alive) {
 			return;
 		}
 
-		if (random.nextDouble() < deathProb) {
+		if (RandomHelper.nextDouble() < deathProb) {
 			// Kill the bee
 			@SuppressWarnings("unchecked")
 			Context<Bee> context = (Context<Bee>) ContextUtils.getContext(this);
@@ -348,6 +360,9 @@ public class Bee {
 		}
 	}
 
+	/**
+	 * Handles the wander state of a bee.
+	 */
 	private void wander() {
 		if (wanderCount > wanderThreshold) {
 
@@ -357,7 +372,7 @@ public class Bee {
 
 		} else {
 			// Move to random direction, see if there is honey, if so, pick it up
-			int direction = random.nextInt(4);
+			int direction = RandomHelper.nextIntFromTo(0, 4 - 1);
 			switch (direction) {
 			case 0:
 				// Move up

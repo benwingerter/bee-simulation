@@ -3,7 +3,6 @@ package BeeSimulation.agents;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 import BeeSimulation.lib.Params;
 import BeeSimulation.userpanel.EventConsumer;
@@ -11,12 +10,12 @@ import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.parameter.Parameters;
+import repast.simphony.random.RandomHelper;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.util.ContextUtils;
 
 public class Hive {
 
-	private final Random random;
 	private final Grid<Object> grid;
 	private final int x;
 	private final int y;
@@ -28,9 +27,8 @@ public class Hive {
 	private final double bearAttackProb;
 	private Optional<EventConsumer> userPanel = Optional.empty();
 
-	public Hive(Grid<Object> grid, final int x, final int y, Random random) {
+	public Hive(Grid<Object> grid, final int x, final int y) {
 		this.grid = grid;
-		this.random = random;
 		this.x = x;
 		this.y = y;
 		Parameters p = RunEnvironment.getInstance().getParameters();
@@ -92,17 +90,17 @@ public class Hive {
 		Context<Bee> context = (Context<Bee>)ContextUtils.getContext(this);
 
 		// Add Bees
-		double r = random.nextDouble();
+		double r = RandomHelper.nextDouble();
 		// Add bee randomly and if required nectar is available
 		if (r <= 0.01 && beeCost <= nectar) {
 			nectar -= beeCost;
-			Bee bee = new Bee(grid, random, ++beeIdCntr, x, y);
+			Bee bee = new Bee(grid, ++beeIdCntr, x, y);
 			context.add(bee);
 			grid.moveTo(bee, x, y);
 		}
 
 		// Bear Attack
-		if (random.nextDouble() < bearAttackProb) {
+		if (RandomHelper.nextDouble() < bearAttackProb) {
 			bearAttack();
 			userPanel.ifPresent(panel -> panel.logEvent());
 		}
