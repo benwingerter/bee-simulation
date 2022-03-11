@@ -21,9 +21,9 @@ getLatestFile <- function(base, extension) {
 
 latest_file <- getLatestFile('population_counts', '.log')[1]
 
-popCounts <-        read.csv(here(d, paste('population_counts.', latest_file, '.log', sep='')), header = TRUE)
-nectarCollection <- read.csv(here(d, paste('nectar_collection.', latest_file, '.log', sep='')), header = TRUE)
-cumNectar <-        read.csv(here(d, paste('cumulative_nectar.', latest_file,'.log', sep='')), header = TRUE)
+popCounts <-        read.csv(here(parent_path, paste('population_counts.', latest_file, '.log', sep='')), header = TRUE)
+nectarCollection <- read.csv(here(parent_path, paste('nectar_collection.', latest_file, '.log', sep='')), header = TRUE)
+cumNectar <-        read.csv(here(parent_path, paste('cumulative_nectar.', latest_file,'.log', sep='')), header = TRUE)
 
 pops <- seq(0:max(popCounts$Bee.Count))
 
