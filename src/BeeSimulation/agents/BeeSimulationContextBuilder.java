@@ -45,8 +45,6 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 	 */
 	public Context<Object> build(Context<Object> context) {
 
-		System.out.println("Building Context");
-
 		// Currently, multiple agent types are being stored in the same context. This
 		// would ideally be solved using nested contexts or Projections. Solving it
 		// would resolve some type checking issues.
@@ -103,8 +101,6 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 		ScheduleParameters checkDone = ScheduleParameters.createRepeating(1, 1);
 		schedule.schedule(checkDone, this, "checkDone");
 
-		System.out.println("Context Built");
-
 		return context;
 	}
 
@@ -112,7 +108,7 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 	 * Terminate the simulation if it is finished
 	 */
 	public void checkDone() {
-		// loop through all bees and see if any are still alive.
+		// See if bee population still exists
 		Iterable<Object> objs = grid.getObjects();
 		boolean isExtinct = StreamSupport.stream(objs.spliterator(), false).allMatch(obj -> !(obj instanceof Bee));
 

@@ -14,6 +14,10 @@ import repast.simphony.random.RandomHelper;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.util.ContextUtils;
 
+/**
+ * Represents the hive agent
+ *
+ */
 public class Hive {
 
 	private final Grid<Object> grid;
@@ -27,6 +31,13 @@ public class Hive {
 	private final double bearAttackProb;
 	private Optional<EventConsumer> userPanel = Optional.empty();
 
+	/**
+	 * Create a new hive
+	 * 
+	 * @param grid The grid on which the hive exists
+	 * @param x    x position of hive
+	 * @param y    y position of hive
+	 */
 	public Hive(Grid<Object> grid, final int x, final int y) {
 		this.grid = grid;
 		this.x = x;
@@ -87,7 +98,7 @@ public class Hive {
 	@ScheduledMethod(start = 1, interval = 1, shuffle = true)
 	public void step() {
 		@SuppressWarnings("unchecked")
-		Context<Bee> context = (Context<Bee>)ContextUtils.getContext(this);
+		Context<Bee> context = (Context<Bee>) ContextUtils.getContext(this);
 
 		// Add Bees
 		double r = RandomHelper.nextDouble();

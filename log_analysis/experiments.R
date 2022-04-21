@@ -3,7 +3,7 @@ if (!require(here)) install.packages('here')
 if (!require(funr)) install.packages('funr')
 
 # Change this to match which variable is being studied
-study_variable <- "bearAttackProb"
+study_variable <- "beeRegenRate"
 
 curr_path <- funr::get_script_path()
 if(is.null(curr_path)) {
@@ -44,11 +44,12 @@ if(length(runs) > 1) {
     values <- rbind(values, last_pop_count)
   }
 }
-# values[values$ratio == 0 & values$Bee.Count > 0,]$ratio <- values[values$ratio == 0 & values$Bee.Count > 0,]$Bee.Count
 values$ratio <- values$Bee.Count / values$Flower.Count
 values$ratio[is.infinite(values$ratio)] <- values$Bee.Count[is.infinite(values$ratio)]
 values <- merge(values, popCountsMap, by="run")
 values <- values[with(values, order(tick, run)),]
+
+save(values, popCounts, popCountsMap, cumNectar, cumNectarMap, nectarCollection, nectarCollectionMap, file = paste(latest_file, ".RData", sep=""))
 
 cat("\nParameter Values:\n")
 cat(paste(values[,study_variable][1:10]), sep="\n")
