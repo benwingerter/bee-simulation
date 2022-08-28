@@ -23,8 +23,8 @@
 		isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
 
-	<parameter name="nectarPerFlower"
-		displayName="Nectar Per Flower" type="int" defaultValue="3"
+	<parameter name="foodPerFlower"
+		displayName="Food Per Flower" type="int" defaultValue="3"
 		isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$IntConverter" />
 

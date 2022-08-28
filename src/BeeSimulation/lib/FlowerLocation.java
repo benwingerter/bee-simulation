@@ -3,18 +3,18 @@ package BeeSimulation.lib;
 public class FlowerLocation {
 	private int x;
 	private int y;
-	private int nectar;
+	private int food;
 	private double distance;
 
-	public FlowerLocation(int x, int y, int nectar, double distance) {
+	public FlowerLocation(int x, int y, int food, double distance) {
 		this.x = x;
 		this.y = y;
-		this.nectar = nectar;
+		this.food = food;
 		this.distance = distance;
 	}
 
 	public double getScore() {
-		return (double)nectar - distance;
+		return (double)food - distance;
 	}
 	
 	public int getX() {
@@ -26,6 +26,6 @@ public class FlowerLocation {
 	}
 
 	public FlowerLocation getCopy() {
-		return new FlowerLocation(x, y, nectar, distance);
+		return new FlowerLocation(x, y, food, distance);
 	}
 }

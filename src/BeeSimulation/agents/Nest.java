@@ -24,8 +24,8 @@ public class Nest {
 	private final int x;
 	private final int y;
 	private final int beeCost;
-	private int nectar;
-	private int cumulativeNectar;
+	private int food;
+	private int cumulativeFood;
 	private List<Bee> wagglers = new LinkedList<Bee>();
 	private int beeIdCntr;
 	private final double bearAttackProb;
@@ -49,7 +49,7 @@ public class Nest {
 	}
 
 	public void bearAttack() {
-		nectar = 0;
+		food = 0;
 	}
 
 	public long beeCount() {
@@ -58,17 +58,17 @@ public class Nest {
 		return context.getObjectsAsStream(Bee.class).count();
 	}
 
-	public void deposit(int nectar) {
-		this.nectar += nectar;
-		this.cumulativeNectar += nectar;
+	public void deposit(int food) {
+		this.food += food;
+		this.cumulativeFood += food;
 	}
 
-	public int getCumulativeNectar() {
-		return cumulativeNectar;
+	public int getCumulativeFood() {
+		return cumulativeFood;
 	}
 
-	public int getNectar() {
-		return nectar;
+	public int getFood() {
+		return food;
 	}
 
 	public List<Bee> getWagglers() {
@@ -102,9 +102,9 @@ public class Nest {
 
 		// Add Bees
 		double r = RandomHelper.nextDouble();
-		// Add bee randomly and if required nectar is available
-		if (r <= 0.01 && beeCost <= nectar) {
-			nectar -= beeCost;
+		// Add bee randomly and if required food is available
+		if (r <= 0.01 && beeCost <= food) {
+			food -= beeCost;
 			Bee bee = new Bee(grid, ++beeIdCntr, x, y);
 			context.add(bee);
 			grid.moveTo(bee, x, y);

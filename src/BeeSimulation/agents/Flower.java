@@ -12,7 +12,7 @@ import repast.simphony.util.ContextUtils;
 public class Flower {
 
 	private final int id;
-	private int nectar;
+	private int food;
 	private int x;
 	private int y;
 	private final double herbicideDriftProb;
@@ -23,7 +23,7 @@ public class Flower {
 		this.id = id;
 		Parameters p = RunEnvironment.getInstance().getParameters();
 		herbicideDriftProb = (Double) p.getValue(Params.HERBICIDE_DRIFT_PROB.getValue());
-		this.nectar = (Integer) p.getValue(Params.NECTAR_PER_FLOWER.getValue());
+		this.food = (Integer) p.getValue(Params.FOOD_PER_FLOWER.getValue());
 	}
 
 	public int getId() {
@@ -38,18 +38,18 @@ public class Flower {
 			@SuppressWarnings("unchecked")
 			Context<Flower> context = (Context<Flower>) ContextUtils.getContext(this);
 			context.remove(this);
-			nectar = 0;
+			food = 0;
 		}
 	}
 
 	/**
-	 * Get nectar from the flower
+	 * Get food from the flower
 	 * 
-	 * @return amount of nectar retrieved
+	 * @return amount of food retrieved
 	 */
-	public int grabNectar() {
-		nectar--;
-		if (nectar == 0) {
+	public int grabFood() {
+		food--;
+		if (food == 0) {
 			@SuppressWarnings("unchecked")
 			final Context<Object> context = (Context<Object>) ContextUtils.getContext(this);
 			context.remove(this);
@@ -58,12 +58,12 @@ public class Flower {
 	}
 
 	/**
-	 * How much nectar the flower has
+	 * How much food the flower has
 	 * 
 	 * @return
 	 */
-	public int nectarContent() {
-		return nectar;
+	public int foodContent() {
+		return food;
 	}
 
 	public int getX() {

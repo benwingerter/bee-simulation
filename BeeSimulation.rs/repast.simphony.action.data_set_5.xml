@@ -1,5 +1,5 @@
 <repast.simphony.data2.engine.DataSetDescriptor simphonyVersion="2.9.0">
-  <name>Cumulative Nectar Count</name>
+  <name>Cumulative Food Count</name>
   <type>AGGREGATE</type>
   <inclTick>true</inclTick>
   <inclBatchRun>false</inclBatchRun>
@@ -16,11 +16,11 @@
   <atEnd>false</atEnd>
   <methodDataSources class="linked-hash-map">
     <entry>
-      <string>Cumulative Nectar</string>
+      <string>Cumulative Food</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
-        <id>Cumulative Nectar</id>
+        <id>Cumulative Food</id>
         <className>BeeSimulation.agents.Nest</className>
-        <methodName>getCumulativeNectar</methodName>
+        <methodName>getCumulativeFood</methodName>
         <aggType>SUM</aggType>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>

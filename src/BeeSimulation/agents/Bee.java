@@ -21,7 +21,7 @@ import repast.simphony.random.RandomHelper;
 public class Bee {
 
 	private static enum State {
-		WANDER, RETURN_TO_NEST, DEPOSIT_NECTAR, AT_NEST, WAGGLE, EXPLOIT, JUMP
+		WANDER, RETURN_TO_NEST, DEPOSIT_FOOD, AT_NEST, WAGGLE, EXPLOIT, JUMP
 	}
 
 	/**
@@ -85,14 +85,14 @@ public class Bee {
 	private Optional<Coordinate> jumpTo = Optional.empty();
 	private int nestX;
 	private int nestY;
-	private int nectar;
+	private int food;
 	private int waggleCount;
 
 	private int wanderCount;
 
 	private int jumpCount;
 
-	private long foundNectarTick = (long) RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
+	private long foundFoodTick = (long) RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
 
 	private boolean alive = true;
 
@@ -140,14 +140,14 @@ public class Bee {
 	}
 
 	/**
-	 * Indicates whether nectar was found during the current tick. This is used by
+	 * Indicates whether food was found during the current tick. This is used by
 	 * the Repast logging tool.
 	 *
-	 * @return if nectar was found during this tick
+	 * @return if food was found during this tick
 	 */
-	public int foundNectar() {
+	public int foundFood() {
 		long tick = (long) RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
-		if (foundNectarTick == tick) {
+		if (foundFoodTick == tick) {
 			return 1;
 		}
 		return 0;
@@ -198,16 +198,16 @@ public class Bee {
 
 		List<Flower> flowers = getFlower(grid, x, y, 0);
 		if (!flowers.isEmpty()) {
-			this.foundNectarTick = (long) RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
+			this.foundFoodTick = (long) RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
 			Flower flower = flowers.get(0);
 			this.state = State.RETURN_TO_NEST;
-			int flowerNectar = flower.nectarContent();
-			if (flowerNectar > 0) {
-				nectar += flower.grabNectar();
-				if (--flowerNectar > 0) {
+			int flowerFood = flower.foodFood();
+			if (flowerFood > 0) {
+				food += flower.grabFood();
+				if (--flowerFood > 0) {
 					// save the Flower
 					double dist = Math.sqrt(Math.pow(nestX - x, 2) + Math.pow(nestY - y, 2));
-					this.knownFlower = new FlowerLocation(x, y, flowerNectar, dist);
+					this.knownFlower = new FlowerLocation(x, y, flowerFood, dist);
 				}
 			}
 		} else {
@@ -309,12 +309,12 @@ public class Bee {
 	private void moveTowardsNest() {
 		boolean arrived = moveTowards(nestX, nestY);
 		if (arrived) {
-			state = State.DEPOSIT_NECTAR;
+			state = State.DEPOSIT_FOOD;
 			Optional<Nest> optNest = getNest(grid, nestX, nestY);
 			if (optNest.isPresent()) {
 				Nest nest = optNest.get();
-				nest.deposit(nectar);
-				nectar = 0;
+				nest.deposit(food);
+				food = 0;
 			}
 		}
 	}
@@ -341,7 +341,7 @@ public class Bee {
 		case AT_NEST:
 			atNest();
 			break;
-		case DEPOSIT_NECTAR:
+		case DEPOSIT_FOOD:
 			state = State.AT_NEST;
 			break;
 		case RETURN_TO_NEST:
@@ -411,7 +411,7 @@ public class Bee {
 						}
 					}
 					// Move towards nearest flower
-					this.knownFlower = new FlowerLocation(closest.getX(), closest.getY(), closest.nectarContent(),
+					this.knownFlower = new FlowerLocation(closest.getX(), closest.getY(), closest.foodContent(),
 							closestDist);
 					this.state = State.EXPLOIT;
 				}

@@ -1,5 +1,5 @@
 <repast.simphony.data2.engine.DataSetDescriptor simphonyVersion="2.9.0">
-  <name>Nectar Count</name>
+  <name>Food Count</name>
   <type>NON_AGGREGATE</type>
   <sourceType>BeeSimulation.agents.Bee</sourceType>
   <inclTick>true</inclTick>
@@ -17,11 +17,11 @@
   <atEnd>false</atEnd>
   <methodDataSources class="linked-hash-map">
     <entry>
-      <string>foundNectar</string>
+      <string>foundFood</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
-        <id>foundNectar</id>
+        <id>foundFood</id>
         <className>BeeSimulation.agents.Bee</className>
-        <methodName>foundNectar</methodName>
+        <methodName>foundFood</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
     <entry>

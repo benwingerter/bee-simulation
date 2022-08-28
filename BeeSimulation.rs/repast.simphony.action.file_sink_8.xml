@@ -1,12 +1,12 @@
 <repast.simphony.data2.engine.FileSinkDescriptor simphonyVersion="2.9.0">
-  <name>Cumulative Nectar Count</name>
-  <dataSet>Cumulative Nectar Count</dataSet>
+  <name>Cumulative Food Count</name>
+  <dataSet>Cumulative Food Count</dataSet>
   <delimiter>,</delimiter>
   <format>TABULAR</format>
   <sourceIds class="linked-hash-set">
-    <string>Cumulative Nectar</string>
+    <string>Cumulative Food</string>
     <string>tick</string>
   </sourceIds>
-  <fileName>cumulative_nectar.log</fileName>
+  <fileName>cumulative_food.log</fileName>
   <addTimeStamp>true</addTimeStamp>
 </repast.simphony.data2.engine.FileSinkDescriptor>
