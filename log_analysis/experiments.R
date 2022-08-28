@@ -27,12 +27,12 @@ getLatestRun <- function(base, extension) {
 latest_file <- getLatestRun('population_counts', '.log')[1]
 
 popCountsMap <-        read.csv(here(parent_path, paste('population_counts.', latest_file, '.batch_param_map.log', sep='')), header = TRUE)
-nectarCollectionMap <- read.csv(here(parent_path, paste('nectar_collection.', latest_file, '.batch_param_map.log', sep='')), header = TRUE)
-cumNectarMap <-        read.csv(here(parent_path, paste('cumulative_nectar.', latest_file, '.batch_param_map.log', sep='')), header = TRUE)
+foodCollectionMap <- read.csv(here(parent_path, paste('food_collection.', latest_file, '.batch_param_map.log', sep='')), header = TRUE)
+cumFoodMap <-        read.csv(here(parent_path, paste('cumulative_food.', latest_file, '.batch_param_map.log', sep='')), header = TRUE)
 
 popCounts <-        read.csv(here(parent_path, paste('population_counts.', latest_file, '.log', sep='')), header = TRUE)
-nectarCollection <- read.csv(here(parent_path, paste('nectar_collection.', latest_file, '.log', sep='')), header = TRUE)
-cumNectar <-        read.csv(here(parent_path, paste('cumulative_nectar.', latest_file,'.log', sep='')), header = TRUE)
+foodCollection <- read.csv(here(parent_path, paste('food_collection.', latest_file, '.log', sep='')), header = TRUE)
+cumFood <-        read.csv(here(parent_path, paste('cumulative_food.', latest_file,'.log', sep='')), header = TRUE)
 
 runs <- popCounts$run[!duplicated(popCounts$run)]
 
@@ -49,7 +49,7 @@ values$ratio[is.infinite(values$ratio)] <- values$Bee.Count[is.infinite(values$r
 values <- merge(values, popCountsMap, by="run")
 values <- values[with(values, order(tick, run)),]
 
-save(values, popCounts, popCountsMap, cumNectar, cumNectarMap, nectarCollection, nectarCollectionMap, file = paste(latest_file, ".RData", sep=""))
+save(values, popCounts, popCountsMap, cumFood, cumFoodMap, foodCollection, foodCollectionMap, file = paste(latest_file, ".RData", sep=""))
 
 cat("\nParameter Values:\n")
 cat(paste(values[,study_variable][1:10]), sep="\n")

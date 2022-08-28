@@ -31,15 +31,15 @@ getLatestFile <- function(base, extension) {
 latest_file <- getLatestFile('population_counts', '.log')[1]
 
 popCountsMap <-        read.csv(here(parent_path, paste('population_counts.', latest_file, '.batch_param_map.log', sep='')), header = TRUE)
-nectarCollectionMap <- read.csv(here(parent_path, paste('nectar_collection.', latest_file, '.batch_param_map.log', sep='')), header = TRUE)
-cumNectarMap <-        read.csv(here(parent_path, paste('cumulative_nectar.', latest_file, '.batch_param_map.log', sep='')), header = TRUE)
+foodCollectionMap <- read.csv(here(parent_path, paste('food_collection.', latest_file, '.batch_param_map.log', sep='')), header = TRUE)
+cumFoodMap <-        read.csv(here(parent_path, paste('cumulative_food.', latest_file, '.batch_param_map.log', sep='')), header = TRUE)
 
 popCounts <-        read.csv(here(parent_path, paste('population_counts.', latest_file, '.log', sep='')), header = TRUE)
-nectarCollection <- read.csv(here(parent_path, paste('nectar_collection.', latest_file, '.log', sep='')), header = TRUE)
-cumNectar <-        read.csv(here(parent_path, paste('cumulative_nectar.', latest_file,'.log', sep='')), header = TRUE)
+foodCollection <- read.csv(here(parent_path, paste('food_collection.', latest_file, '.log', sep='')), header = TRUE)
+cumFood <-        read.csv(here(parent_path, paste('cumulative_food.', latest_file,'.log', sep='')), header = TRUE)
 
 # Most of the functionality should be here.
-# I want a table with columns: parameter (number), survived (boolean), end bees, end nectar, end bees/nectar
+# I want a table with columns: parameter (number), survived (boolean), end bees, end food, end bees/food
 
 runs <- popCounts$run[!duplicated(popCounts$run)]
 
@@ -54,21 +54,21 @@ if(length(runs) > 1) {
 values$ratio <- values$Bee.Count / values$Flower.Count
 values <- merge(values, popCountsMap, by="run")
 
-# get_rate <- function(popCounts, nectarCollection) {
+# get_rate <- function(popCounts, foodCollection) {
 #   pops <- seq(0:max(popCounts$Bee.Count))
 #   sapply(pops, function(pop) {
 #     ticks_at_pop <- popCounts[popCounts$Bee.Count==pop,]$tick
-#     nectar_at_pop <- Reduce("+", sapply(ticks_at_pop, function(tick) {
-#       sum(nectarCollection[nectarCollection$tick == tick,]$foundNectar)
+#     food_at_pop <- Reduce("+", sapply(ticks_at_pop, function(tick) {
+#       sum(foodCollection[foodCollection$tick == tick,]$foundFood)
 #     }))
 #     num_ticks_at_pop <- sum(popCounts$Bee.Count == pop)
-#     rate <- ifelse(num_ticks_at_pop > 0, nectar_at_pop / num_ticks_at_pop, 0)
+#     rate <- ifelse(num_ticks_at_pop > 0, food_at_pop / num_ticks_at_pop, 0)
 #     return(rate)
 #   })
 # }
 #
 # rates <- sapply(runs, function(run) {
-#   get_rate(popCounts[popCounts$run == run,], nectarCollection[nectarCollection$run == run,])
+#   get_rate(popCounts[popCounts$run == run,], foodCollection[foodCollection$run == run,])
 # })
 #
 # # get vector for runs with runs in order
@@ -86,9 +86,9 @@ values <- merge(values, popCountsMap, by="run")
 
 # g <- ggplot(data=rates_df, aes(x=pops, y=rates, group=runs, color=factor(runs))) +
 #   geom_line() +
-#   ggtitle("Nectar Collection Rates") +
+#   ggtitle("Food Collection Rates") +
 #   xlab("Bee Population") +
-#   ylab("Rate of Collection (Nectar/ticks at population)") +
+#   ylab("Rate of Collection (Food/ticks at population)") +
 #   labs(color="Run")
 # print(g)
 #
@@ -108,10 +108,10 @@ values <- merge(values, popCountsMap, by="run")
 #   labs(color="Run")
 # print(g)
 #
-# g <- ggplot(data=cumNectar, aes(x=tick, y=Cumulative.Nectar, group=run, color=factor(run))) +
+# g <- ggplot(data=cumFood, aes(x=tick, y=Cumulative.Food, group=run, color=factor(run))) +
 #   geom_line() +
-#   ggtitle("Cumulative Nectar Collected") +
+#   ggtitle("Cumulative Food Collected") +
 #   xlab("Tick") +
-#   ylab("Cumulative Nectar") +
+#   ylab("Cumulative Food") +
 #   labs(color="Run")
 # print(g)

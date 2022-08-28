@@ -22,18 +22,18 @@ getLatestFile <- function(base, extension) {
 latest_file <- getLatestFile('population_counts', '.log')[1]
 
 popCounts <-        read.csv(here(parent_path, paste('population_counts.', latest_file, '.log', sep='')), header = TRUE)
-nectarCollection <- read.csv(here(parent_path, paste('nectar_collection.', latest_file, '.log', sep='')), header = TRUE)
-cumNectar <-        read.csv(here(parent_path, paste('cumulative_nectar.', latest_file,'.log', sep='')), header = TRUE)
+Collection <- read.csv(here(parent_path, paste('food_collection.', latest_file, '.log', sep='')), header = TRUE)
+cumFood <-        read.csv(here(parent_path, paste('cumulative_food.', latest_file,'.log', sep='')), header = TRUE)
 
 pops <- seq(0:max(popCounts$Bee.Count))
 
 rates <- sapply(pops, function(pop) {
   ticks_at_pop <- popCounts[popCounts$Bee.Count==pop,]$tick
-  nectar_at_pop <- Reduce("+", sapply(ticks_at_pop, function(tick) {
-    sum(nectarCollection[nectarCollection$tick == tick,]$foundNectar)
+  food_at_pop <- Reduce("+", sapply(ticks_at_pop, function(tick) {
+    sum(foodCollection[foodCollection$tick == tick,]$foundFood)
   }))
   num_ticks_at_pop <- sum(popCounts$Bee.Count == pop)
-  rate <- ifelse(num_ticks_at_pop > 0, nectar_at_pop / num_ticks_at_pop, 0)
+  rate <- ifelse(num_ticks_at_pop > 0, food_at_pop / num_ticks_at_pop, 0)
   return(rate)
 })
 
@@ -43,7 +43,7 @@ rates_df <- data.frame(Rate = rates, Population = pops)
 g <- ggplot(data=rates_df, aes(x=Population, y=Rate)) +
   geom_line() +
   geom_point() +
-  ggtitle("Nectar Collection Rates") +
+  ggtitle("Food Collection Rates") +
   xlab("Bee Population") +
-  ylab("Rate of Collection (Nectar/ticks at population)")
+  ylab("Rate of Collection (Food/ticks at population)")
 print(g)
