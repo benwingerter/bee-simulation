@@ -15,10 +15,10 @@ import repast.simphony.space.grid.Grid;
 import repast.simphony.util.ContextUtils;
 
 /**
- * Represents the hive agent
+ * Represents the nest agent
  *
  */
-public class Hive {
+public class Nest {
 
 	private final Grid<Object> grid;
 	private final int x;
@@ -32,13 +32,13 @@ public class Hive {
 	private Optional<EventConsumer> userPanel = Optional.empty();
 
 	/**
-	 * Create a new hive
+	 * Create a new nest
 	 * 
-	 * @param grid The grid on which the hive exists
-	 * @param x    x position of hive
-	 * @param y    y position of hive
+	 * @param grid The grid on which the nest exists
+	 * @param x    x position of nest
+	 * @param y    y position of nest
 	 */
-	public Hive(Grid<Object> grid, final int x, final int y) {
+	public Nest(Grid<Object> grid, final int x, final int y) {
 		this.grid = grid;
 		this.x = x;
 		this.y = y;
@@ -54,7 +54,7 @@ public class Hive {
 
 	public long beeCount() {
 		@SuppressWarnings("unchecked")
-		Context<Hive> context = (Context<Hive>) ContextUtils.getContext(this);
+		Context<Nest> context = (Context<Nest>) ContextUtils.getContext(this);
 		return context.getObjectsAsStream(Bee.class).count();
 	}
 

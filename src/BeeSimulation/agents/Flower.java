@@ -15,14 +15,14 @@ public class Flower {
 	private int nectar;
 	private int x;
 	private int y;
-	private final double pesticideDriftProb;
+	private final double herbicideDriftProb;
 
 	public Flower(int id, int x, int y) {
 		this.x = x;
 		this.y = y;
 		this.id = id;
 		Parameters p = RunEnvironment.getInstance().getParameters();
-		pesticideDriftProb = (Double) p.getValue(Params.PESTICIDE_DRIFT_PROB.getValue());
+		herbicideDriftProb = (Double) p.getValue(Params.HERBICIDE_DRIFT_PROB.getValue());
 		this.nectar = (Integer) p.getValue(Params.NECTAR_PER_FLOWER.getValue());
 	}
 
@@ -32,9 +32,9 @@ public class Flower {
 
 	@ScheduledMethod(start = 1, interval = 1, shuffle = true)
 	public void step() {
-		// Random Pesticide Drift
+		// Random Herbicide Drift
 		RandomEngine dist = RandomHelper.getGenerator();
-		if (dist.nextDouble() < pesticideDriftProb) {
+		if (dist.nextDouble() < herbicideDriftProb) {
 			@SuppressWarnings("unchecked")
 			Context<Flower> context = (Context<Flower>) ContextUtils.getContext(this);
 			context.remove(this);

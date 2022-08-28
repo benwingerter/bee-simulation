@@ -56,8 +56,8 @@
 		defaultValue="0.01" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
 
-	<parameter name="pesticideDriftProb"
-		displayName="Pesticide Drift Probability" type="double"
+	<parameter name="herbicideDriftProb"
+		displayName="Herbicide Drift Probability" type="double"
 		defaultValue="1.0E-4" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
 

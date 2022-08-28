@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
-import BeeSimulation.agents.Hive;
+import BeeSimulation.agents.Nest;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.environment.RunListener;
@@ -20,7 +20,7 @@ import repast.simphony.userpanel.ui.UserPanelCreator;
 
 public class UserPanel implements UserPanelCreator, EventConsumer {
 
-	private Optional<Hive> hive = Optional.empty();
+	private Optional<Nest> nest = Optional.empty();
 	private Optional<JList<Long>> list = Optional.empty();
 	private BearListModel listModel = new BearListModel();
 
@@ -49,10 +49,10 @@ public class UserPanel implements UserPanelCreator, EventConsumer {
 			@Override
 			public void started() {
 				@SuppressWarnings("unchecked")
-				Context<Hive> context = RunState.getInstance().getMasterContext();
-				Stream<Hive> s = context.getObjectsAsStream(Hive.class);
-				hive = Optional.of(s.findFirst().get());
-//				hive.get().registerPanel(UserPanel.this);
+				Context<Nest> context = RunState.getInstance().getMasterContext();
+				Stream<Nest> s = context.getObjectsAsStream(Nest.class);
+				nest = Optional.of(s.findFirst().get());
+//				nest.get().registerPanel(UserPanel.this);
 			}
 
 			@Override
@@ -67,7 +67,7 @@ public class UserPanel implements UserPanelCreator, EventConsumer {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				UserPanel.this.hive.ifPresent(hive -> hive.bearAttack());
+				UserPanel.this.nest.ifPresent(nest -> nest.bearAttack());
 				logEvent();
 			}
 

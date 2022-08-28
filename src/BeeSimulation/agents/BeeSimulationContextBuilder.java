@@ -29,8 +29,8 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 
 	private Context<Object> context;
 	private Grid<Object> grid;
-	private int hiveX;
-	private int hiveY;
+	private int nestX;
+	private int nestY;
 	private int gridWidth;
 	private int gridHeight;
 	private int maxTicks;
@@ -69,24 +69,24 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 		grid = gridFactory.createGrid("Grid", context, new GridBuilderParameters<Object>(new StickyBorders(),
 				new SimpleGridAdder<Object>(), true, gridWidth, gridHeight));
 
-		// Add hive
-		hiveX = RandomHelper.nextIntFromTo(0, gridWidth - 1);
-		hiveY = RandomHelper.nextIntFromTo(0, gridHeight - 1);
-		Hive hive = new Hive(grid, hiveX, hiveY);
-		context.add(hive);
-		grid.moveTo(hive, hiveX, hiveY);
+		// Add nest
+		nestX = RandomHelper.nextIntFromTo(0, gridWidth - 1);
+		nestY = RandomHelper.nextIntFromTo(0, gridHeight - 1);
+		Nest nest = new Nest(grid, nestX, nestY);
+		context.add(nest);
+		grid.moveTo(nest, nestX, nestY);
 
 		// Add bees
 		IntStream.range(0, numBees - 1).forEach(beeCounter -> {
-			Bee bee = new Bee(grid, beeIdCntr, hiveX, hiveY);
+			Bee bee = new Bee(grid, beeIdCntr, nestX, nestY);
 			context.add(bee);
-			grid.moveTo(bee, hiveX, hiveY);
+			grid.moveTo(bee, nestX, nestY);
 		});
 
 		// Add flowers
 		IntStream.range(0, gridHeight).forEach(row -> {
 			IntStream.range(0, gridWidth).forEach(column -> {
-				if (RandomHelper.nextDouble() < flowerDensity && row != hiveY && column != hiveX) {
+				if (RandomHelper.nextDouble() < flowerDensity && row != nestY && column != nestX) {
 					Flower flower = new Flower(++flowerIdCntr, column, row);
 					context.add(flower);
 					grid.moveTo(flower, column, row);
