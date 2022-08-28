@@ -7,7 +7,7 @@
       <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
     <entry>
-      <string>BeeSimulation.agents.Nest</string>
+      <string>BeeSimulation.agents.Hive</string>
       <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
     <entry>
@@ -21,8 +21,8 @@
       <string>BeeSimulation.agents.Flower.style_0.xml</string>
     </entry>
     <entry>
-      <string>BeeSimulation.agents.Nest</string>
-      <string>BeeSimulation.agents.Nest.style_0.xml</string>
+      <string>BeeSimulation.agents.Hive</string>
+      <string>BeeSimulation.agents.Hive.style_0.xml</string>
     </entry>
     <entry>
       <string>BeeSimulation.agents.Bee</string>
@@ -50,7 +50,7 @@
       <int>0</int>
     </entry>
     <entry>
-      <string>BeeSimulation.agents.Nest</string>
+      <string>BeeSimulation.agents.Hive</string>
       <int>2</int>
     </entry>
     <entry>

@@ -21,7 +21,7 @@ import repast.simphony.random.RandomHelper;
 public class Bee {
 
 	private static enum State {
-		WANDER, RETURN_TO_NEST, DEPOSIT_FOOD, AT_NEST, WAGGLE, EXPLOIT, JUMP
+		WANDER, RETURN_TO_HIVE, DEPOSIT_FOOD, AT_HIVE, WAGGLE, EXPLOIT, JUMP
 	}
 
 	/**
@@ -83,8 +83,8 @@ public class Bee {
 	private FlowerLocation knownFlower;
 	private State state = State.WANDER;
 	private Optional<Coordinate> jumpTo = Optional.empty();
-	private int nestX;
-	private int nestY;
+	private int hiveX;
+	private int hiveY;
 	private int food;
 	private int waggleCount;
 
@@ -96,32 +96,32 @@ public class Bee {
 
 	private boolean alive = true;
 
-	public Bee(Grid<Object> grid, int id, int nestX, int nestY) {
+	public Bee(Grid<Object> grid, int id, int hiveX, int hiveY) {
 		this.id = id;
 		this.grid = grid;
-		this.nestX = nestX;
-		this.nestY = nestY;
+		this.hiveX = hiveX;
+		this.hiveY = hiveY;
 		Parameters p = RunEnvironment.getInstance().getParameters();
 		sightRadius = (Integer) p.getValue(Params.SIGHT_RADIUS.getValue());
 		deathProb = (Double) p.getValue(Params.DEATH_PROB.getValue());
 	}
 
-	private void atNest() {
-		getNest(grid, nestX, nestY).ifPresent(nest -> {
+	private void atHive() {
+		getHive(grid, hiveX, hiveY).ifPresent(hive -> {
 			if (knownFlower != null) {
 				// Waggle
 				if (waggleCount < wagglePersistence) {
 					if (waggleCount == 0) {
-						nest.joinWagglers(this);
+						hive.joinWagglers(this);
 					}
 					waggleCount++;
 				} else {
-					nest.leaveWagglers(this);
+					hive.leaveWagglers(this);
 					this.state = State.EXPLOIT;
 				}
 			} else {
 				// Observe the best dance
-				List<Bee> wagglers = nest.getWagglers();
+				List<Bee> wagglers = hive.getWagglers();
 				if (wagglers.size() == 0) {
 					this.state = State.WANDER;
 				} else {
@@ -154,24 +154,24 @@ public class Bee {
 	}
 
 	/**
-	 * Get the nest in the given grid position if it exists
+	 * Get the hive in the given grid position if it exists
 	 *
 	 * @param grid environment grid
 	 * @param x    x position
 	 * @param y    y position
-	 * @return the nest if exists
+	 * @return the hive if exists
 	 */
-	private Optional<Nest> getNest(Grid<Object> grid, int x, int y) {
+	private Optional<Hive> getHive(Grid<Object> grid, int x, int y) {
 		@SuppressWarnings("unchecked")
-		Context<Nest> context = (Context<Nest>) ContextUtils.getContext(this);
-		Stream<Nest> s = context.getObjectsAsStream(Nest.class);
-		List<Nest> nests = s.filter(h -> {
+		Context<Hive> context = (Context<Hive>) ContextUtils.getContext(this);
+		Stream<Hive> s = context.getObjectsAsStream(Hive.class);
+		List<Hive> hives = s.filter(h -> {
 			return h.getX() == x && h.getY() == y;
 		}).collect(Collectors.toList());
-		if (nests.isEmpty()) {
+		if (hives.isEmpty()) {
 			return Optional.empty();
 		}
-		return Optional.of(nests.get(0));
+		return Optional.of(hives.get(0));
 	}
 
 	public int getId() {
@@ -200,13 +200,13 @@ public class Bee {
 		if (!flowers.isEmpty()) {
 			this.foundFoodTick = (long) RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
 			Flower flower = flowers.get(0);
-			this.state = State.RETURN_TO_NEST;
+			this.state = State.RETURN_TO_HIVE;
 			int flowerFood = flower.foodContent();
 			if (flowerFood > 0) {
 				food += flower.grabFood();
 				if (--flowerFood > 0) {
 					// save the Flower
-					double dist = Math.sqrt(Math.pow(nestX - x, 2) + Math.pow(nestY - y, 2));
+					double dist = Math.sqrt(Math.pow(hiveX - x, 2) + Math.pow(hiveY - y, 2));
 					this.knownFlower = new FlowerLocation(x, y, flowerFood, dist);
 				}
 			}
@@ -304,16 +304,16 @@ public class Bee {
 	}
 
 	/**
-	 * Move towards the nest
+	 * Move towards the hive
 	 */
-	private void moveTowardsNest() {
-		boolean arrived = moveTowards(nestX, nestY);
+	private void moveTowardsHive() {
+		boolean arrived = moveTowards(hiveX, hiveY);
 		if (arrived) {
 			state = State.DEPOSIT_FOOD;
-			Optional<Nest> optNest = getNest(grid, nestX, nestY);
-			if (optNest.isPresent()) {
-				Nest nest = optNest.get();
-				nest.deposit(food);
+			Optional<Hive> optHive = getHive(grid, hiveX, hiveY);
+			if (optHive.isPresent()) {
+				Hive hive = optHive.get();
+				hive.deposit(food);
 				food = 0;
 			}
 		}
@@ -338,14 +338,14 @@ public class Bee {
 		}
 
 		switch (state) {
-		case AT_NEST:
-			atNest();
+		case AT_HIVE:
+			atHive();
 			break;
 		case DEPOSIT_FOOD:
-			state = State.AT_NEST;
+			state = State.AT_HIVE;
 			break;
-		case RETURN_TO_NEST:
-			moveTowardsNest();
+		case RETURN_TO_HIVE:
+			moveTowardsHive();
 			break;
 		case JUMP:
 			jump();

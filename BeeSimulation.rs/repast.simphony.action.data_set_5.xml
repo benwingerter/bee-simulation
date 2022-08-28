@@ -19,7 +19,7 @@
       <string>Cumulative Food</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>Cumulative Food</id>
-        <className>BeeSimulation.agents.Nest</className>
+        <className>BeeSimulation.agents.Hive</className>
         <methodName>getCumulativeFood</methodName>
         <aggType>SUM</aggType>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
