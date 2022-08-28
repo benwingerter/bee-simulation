@@ -201,7 +201,7 @@ public class Bee {
 			this.foundFoodTick = (long) RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
 			Flower flower = flowers.get(0);
 			this.state = State.RETURN_TO_NEST;
-			int flowerFood = flower.foodFood();
+			int flowerFood = flower.foodContent();
 			if (flowerFood > 0) {
 				food += flower.grabFood();
 				if (--flowerFood > 0) {
