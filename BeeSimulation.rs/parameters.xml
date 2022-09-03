@@ -55,8 +55,8 @@
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 											/>
-				<parameter name="proportionHoneyHarvested" displayName="Proportion of Honey Harvested" type="double" 
-						defaultValue="1.0" 
+				<parameter name="proportionHoneyHarvested" displayName="Percentage of Honey Harvested" type="double" 
+						defaultValue="0.9" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 											/>
