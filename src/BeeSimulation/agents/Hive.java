@@ -29,6 +29,7 @@ public class Hive {
 	private List<Bee> wagglers = new LinkedList<Bee>();
 	private int beeIdCntr;
 	private final double honeyHarvestProb;
+	private final double propHoneyHarvested;
 	private Optional<EventConsumer> userPanel = Optional.empty();
 
 	/**
@@ -46,15 +47,17 @@ public class Hive {
 		beeIdCntr = (Integer) p.getValue(Params.NUM_BEES.getValue()) - 1;
 		beeCost = (Integer) p.getValue(Params.BEE_COST.getValue());
 		honeyHarvestProb = (Double) p.getValue(Params.HONEY_HARVEST_PROB.getValue());
+		propHoneyHarvested = (Double) p.getValue(Params.PROPORTION_HONEY_HARVESTED.getValue());
 	}
 
 	public void harvestHoney() {
-		food = 0;
+		double remaining = food * propHoneyHarvested;
+		food = (int) Math.round(remaining);
 	}
 
 	public long beeCount() {
 		@SuppressWarnings("unchecked")
-		Context<Hive> context = (Context<Hive>) ContextUtils.getContext(this);
+		Context<Hive> context = ContextUtils.getContext(this);
 		return context.getObjectsAsStream(Bee.class).count();
 	}
 
@@ -98,7 +101,7 @@ public class Hive {
 	@ScheduledMethod(start = 1, interval = 1, shuffle = true)
 	public void step() {
 		@SuppressWarnings("unchecked")
-		Context<Bee> context = (Context<Bee>) ContextUtils.getContext(this);
+		Context<Bee> context = ContextUtils.getContext(this);
 
 		// Add Bees
 		double r = RandomHelper.nextDouble();
