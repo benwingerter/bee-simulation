@@ -3,17 +3,17 @@ package BeeSimulation.lib;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BearAttackStore {
+public class HarvestedHoneyStore {
 
-	private static BearAttackStore bearStore = new BearAttackStore();
+	private static HarvestedHoneyStore harvestedHoneyStore = new HarvestedHoneyStore();
 	private List<Integer> ticks = new ArrayList<>();
 
-	private BearAttackStore() {
+	private HarvestedHoneyStore() {
 
 	}
 
-	public BearAttackStore getInstance() {
-		return bearStore;
+	public HarvestedHoneyStore getInstance() {
+		return harvestedHoneyStore;
 	}
 
 	public void addTick(int tick) {

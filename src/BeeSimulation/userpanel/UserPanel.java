@@ -22,14 +22,14 @@ public class UserPanel implements UserPanelCreator, EventConsumer {
 
 	private Optional<Hive> hive = Optional.empty();
 	private Optional<JList<Long>> list = Optional.empty();
-	private BearListModel listModel = new BearListModel();
+	private HoneyHarvestListModel listModel = new HoneyHarvestListModel();
 
 	@Override
 	public JPanel createPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		JButton bearButton = new JButton("Bear Attack");
-		JLabel label = new JLabel("Bear Attack Log (ticks)");
+		JButton harvestHoneyButton = new JButton("Harvest Honey");
+		JLabel label = new JLabel("Honey Harvest Log (ticks)");
 		list = Optional.of(new JList<Long>(listModel));
 
 		RunEnvironment.getInstance().addRunListener(new RunListener() {
@@ -62,16 +62,16 @@ public class UserPanel implements UserPanelCreator, EventConsumer {
 
 		});
 
-		bearButton.addActionListener(new ActionListener() {
+		harvestHoneyButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				UserPanel.this.hive.ifPresent(hive -> hive.bearAttack());
+				UserPanel.this.hive.ifPresent(hive -> hive.harvestHoney());
 				logEvent();
 			}
 
 		});
-		panel.add(bearButton);
+		panel.add(harvestHoneyButton);
 		panel.add(label);
 		panel.add(list.get());
 		return panel;

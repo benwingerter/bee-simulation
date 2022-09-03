@@ -61,8 +61,8 @@
 		defaultValue="1.0E-4" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
 
-	<parameter name="bearAttackProb"
-		displayName="Bear Attack Probability" type="double"
+	<parameter name="honeyHarvestProb"
+		displayName="Honey Harvest Probability" type="double"
 		defaultValue="0.001" isReadOnly="false"
 		converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" />
 

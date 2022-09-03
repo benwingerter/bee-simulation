@@ -28,7 +28,7 @@ public class Hive {
 	private int cumulativeFood;
 	private List<Bee> wagglers = new LinkedList<Bee>();
 	private int beeIdCntr;
-	private final double bearAttackProb;
+	private final double honeyHarvestProb;
 	private Optional<EventConsumer> userPanel = Optional.empty();
 
 	/**
@@ -45,10 +45,10 @@ public class Hive {
 		Parameters p = RunEnvironment.getInstance().getParameters();
 		beeIdCntr = (Integer) p.getValue(Params.NUM_BEES.getValue()) - 1;
 		beeCost = (Integer) p.getValue(Params.BEE_COST.getValue());
-		bearAttackProb = (Double) p.getValue(Params.BEAR_ATTACK_PROB.getValue());
+		honeyHarvestProb = (Double) p.getValue(Params.HONEY_HARVEST_PROB.getValue());
 	}
 
-	public void bearAttack() {
+	public void harvestHoney() {
 		food = 0;
 	}
 
@@ -110,9 +110,9 @@ public class Hive {
 			grid.moveTo(bee, x, y);
 		}
 
-		// Bear Attack
-		if (RandomHelper.nextDouble() < bearAttackProb) {
-			bearAttack();
+		// Harvest Honey
+		if (RandomHelper.nextDouble() < honeyHarvestProb) {
+			harvestHoney();
 			userPanel.ifPresent(panel -> panel.logEvent());
 		}
 

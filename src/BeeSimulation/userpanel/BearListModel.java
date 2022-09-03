@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.swing.AbstractListModel;
 
-public class BearListModel extends AbstractListModel<Long> {
+public class HoneyHarvestListModel extends AbstractListModel<Long> {
 
 	private static final long serialVersionUID = 1L;
 	private List<Long> list = new ArrayList<>();
