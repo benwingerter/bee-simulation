@@ -1,4 +1,4 @@
-<repast.simphony.userpanel.ui.DefaultUserPanelDescriptor simphonyVersion="2.9.0">
+<repast.simphony.userpanel.ui.DefaultUserPanelDescriptor simphonyVersion="2.9.1">
   <name>Honey Harvest Panel</name>
   <userPanelCreator>BeeSimulation.userpanel.UserPanel</userPanelCreator>
 </repast.simphony.userpanel.ui.DefaultUserPanelDescriptor>

@@ -1,7 +1,6 @@
-<repast.simphony.data2.engine.DataSetDescriptor simphonyVersion="2.9.0">
-  <name>Food Count</name>
-  <type>NON_AGGREGATE</type>
-  <sourceType>BeeSimulation.agents.Bee</sourceType>
+<repast.simphony.data2.engine.DataSetDescriptor simphonyVersion="2.9.1">
+  <name>Cumulative Food Count</name>
+  <type>AGGREGATE</type>
   <inclTick>true</inclTick>
   <inclBatchRun>false</inclBatchRun>
   <inclRandomSeed>false</inclRandomSeed>
@@ -12,24 +11,17 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-1266960782</hashCode>
+    <hashCode>1230939915</hashCode>
   </scheduleParams>
   <atEnd>false</atEnd>
   <methodDataSources class="linked-hash-map">
     <entry>
-      <string>foundFood</string>
+      <string>Cumulative Food</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
-        <id>foundFood</id>
-        <className>BeeSimulation.agents.Bee</className>
-        <methodName>foundFood</methodName>
-      </repast.simphony.data2.engine.MethodDataSourceDefinition>
-    </entry>
-    <entry>
-      <string>Id</string>
-      <repast.simphony.data2.engine.MethodDataSourceDefinition>
-        <id>Id</id>
-        <className>BeeSimulation.agents.Bee</className>
-        <methodName>getId</methodName>
+        <id>Cumulative Food</id>
+        <className>BeeSimulation.agents.Hive</className>
+        <methodName>getCumulativeFood</methodName>
+        <aggType>SUM</aggType>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
   </methodDataSources>

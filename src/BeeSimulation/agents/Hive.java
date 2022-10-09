@@ -3,6 +3,7 @@ package BeeSimulation.agents;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 import BeeSimulation.lib.Params;
 import BeeSimulation.userpanel.EventConsumer;
@@ -119,5 +120,39 @@ public class Hive {
 			userPanel.ifPresent(panel -> panel.logEvent());
 		}
 
+	}
+
+	/**
+	 * Get the current number of flowers in the simulation
+	 * 
+	 * @return flower count
+	 */
+	public long getFlowerCount() {
+		System.out.println("collecting data");
+		Iterable<Object> objs = grid.getObjects();
+		return StreamSupport.stream(objs.spliterator(), false).filter(Flower.class::isInstance).count();
+	}
+
+	/**
+	 * Get current number of bees
+	 * 
+	 * @return bee count
+	 */
+	public long getBeeCount() {
+		System.out.println("collecting data");
+		Iterable<Object> objs = grid.getObjects();
+		return StreamSupport.stream(objs.spliterator(), false).filter(Bee.class::isInstance).count();
+	}
+
+	/**
+	 * Get amount of food collected this tick
+	 * 
+	 * @return food count
+	 */
+	public int getFoodCollected() {
+		System.out.println("collecting data");
+		Iterable<Object> objs = grid.getObjects();
+		return StreamSupport.stream(objs.spliterator(), false).filter(Bee.class::isInstance).map(Bee.class::cast)
+				.map(bee -> bee.foundFood()).reduce(0, Integer::sum);
 	}
 }

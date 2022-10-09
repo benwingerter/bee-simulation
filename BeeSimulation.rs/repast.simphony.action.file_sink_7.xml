@@ -1,13 +1,14 @@
-<repast.simphony.data2.engine.FileSinkDescriptor simphonyVersion="2.9.0">
-  <name>Population Counts</name>
-  <dataSet>Flower and Bee Counts</dataSet>
+<repast.simphony.data2.engine.FileSinkDescriptor simphonyVersion="2.9.1">
+  <name>Simulation Data</name>
+  <dataSet>Consolidated Data</dataSet>
   <delimiter>,</delimiter>
   <format>TABULAR</format>
   <sourceIds class="linked-hash-set">
+    <string>BeeCount</string>
+    <string>FlowerCount</string>
+    <string>FoodCollected</string>
     <string>tick</string>
-    <string>Flower Count</string>
-    <string>Bee Count</string>
   </sourceIds>
-  <fileName>population_counts.log</fileName>
+  <fileName>ModelOutput.txt</fileName>
   <addTimeStamp>true</addTimeStamp>
 </repast.simphony.data2.engine.FileSinkDescriptor>

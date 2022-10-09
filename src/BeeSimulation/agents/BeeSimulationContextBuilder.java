@@ -1,5 +1,9 @@
 package BeeSimulation.agents;
 
+import java.util.stream.IntStream;
+import java.util.stream.StreamSupport;
+
+import BeeSimulation.lib.Params;
 import repast.simphony.context.Context;
 import repast.simphony.context.DefaultContext;
 import repast.simphony.context.space.grid.GridFactory;
@@ -9,16 +13,11 @@ import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ISchedule;
 import repast.simphony.engine.schedule.ScheduleParameters;
 import repast.simphony.parameter.Parameters;
+import repast.simphony.random.RandomHelper;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridBuilderParameters;
 import repast.simphony.space.grid.SimpleGridAdder;
 import repast.simphony.space.grid.StickyBorders;
-import repast.simphony.random.RandomHelper;
-
-import java.util.stream.IntStream;
-import java.util.stream.StreamSupport;
-
-import BeeSimulation.lib.Params;
 
 /**
  * Builds the simulation context. This class is NOT re-instantiated when the
@@ -43,6 +42,7 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 	 * 
 	 * @return the created context
 	 */
+	@Override
 	public Context<Object> build(Context<Object> context) {
 
 		// Currently, multiple agent types are being stored in the same context. This
@@ -129,6 +129,40 @@ public class BeeSimulationContextBuilder extends DefaultContext<Object> implemen
 			context.add(flower);
 			grid.moveTo(flower, x, y);
 		}
+	}
+
+	/**
+	 * Get the current number of flowers in the simulation
+	 * 
+	 * @return flower count
+	 */
+	public long getFlowerCount() {
+		System.out.println("collecting data");
+		Iterable<Object> objs = grid.getObjects();
+		return StreamSupport.stream(objs.spliterator(), false).filter(Flower.class::isInstance).count();
+	}
+
+	/**
+	 * Get current number of bees
+	 * 
+	 * @return bee count
+	 */
+	public long getBeeCount() {
+		System.out.println("collecting data");
+		Iterable<Object> objs = grid.getObjects();
+		return StreamSupport.stream(objs.spliterator(), false).filter(Bee.class::isInstance).count();
+	}
+
+	/**
+	 * Get amount of food collected this tick
+	 * 
+	 * @return food count
+	 */
+	public int getFoodCollected() {
+		System.out.println("collecting data");
+		Iterable<Object> objs = grid.getObjects();
+		return StreamSupport.stream(objs.spliterator(), false).filter(Bee.class::isInstance).map(Bee.class::cast)
+				.map(bee -> bee.foundFood()).reduce(0, Integer::sum);
 	}
 
 }

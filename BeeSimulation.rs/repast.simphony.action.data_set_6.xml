@@ -1,0 +1,47 @@
+<repast.simphony.data2.engine.DataSetDescriptor simphonyVersion="2.9.1">
+  <name>Consolidated Data</name>
+  <type>NON_AGGREGATE</type>
+  <sourceType>BeeSimulation.agents.Hive</sourceType>
+  <inclTick>true</inclTick>
+  <inclBatchRun>false</inclBatchRun>
+  <inclRandomSeed>false</inclRandomSeed>
+  <scheduleParams>
+    <start>1.0</start>
+    <interval>1.0</interval>
+    <priority>-Infinity</priority>
+    <pType>LAST</pType>
+    <duration>-1.0</duration>
+    <frequency>REPEAT</frequency>
+    <hashCode>-787314599</hashCode>
+  </scheduleParams>
+  <atEnd>false</atEnd>
+  <methodDataSources class="linked-hash-map">
+    <entry>
+      <string>BeeCount</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>BeeCount</id>
+        <className>BeeSimulation.agents.Hive</className>
+        <methodName>getBeeCount</methodName>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
+    </entry>
+    <entry>
+      <string>FlowerCount</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>FlowerCount</id>
+        <className>BeeSimulation.agents.Hive</className>
+        <methodName>getFlowerCount</methodName>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
+    </entry>
+    <entry>
+      <string>FoodCollected</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>FoodCollected</id>
+        <className>BeeSimulation.agents.Hive</className>
+        <methodName>getFoodCollected</methodName>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
+    </entry>
+  </methodDataSources>
+  <countSources class="linked-hash-map"/>
+  <customNADataSources class="linked-hash-map"/>
+  <customAggDataSources class="linked-hash-map"/>
+</repast.simphony.data2.engine.DataSetDescriptor>

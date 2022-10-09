@@ -1,4 +1,4 @@
-<repast.simphony.visualization.engine.CartesianDisplayDescriptor simphonyVersion="2.9.0">
+<repast.simphony.visualization.engine.CartesianDisplayDescriptor simphonyVersion="2.9.1">
   <name>Grid Display</name>
   <type>2D</type>
   <styles>

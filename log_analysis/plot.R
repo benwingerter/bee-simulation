@@ -22,8 +22,8 @@ getLatestFile <- function(base, extension) {
 latest_file <- getLatestFile('population_counts', '.log')[1]
 
 popCounts <-        read.csv(here(parent_path, paste('population_counts.', latest_file, '.log', sep='')), header = TRUE)
-Collection <- read.csv(here(parent_path, paste('food_collection.', latest_file, '.log', sep='')), header = TRUE)
-cumFood <-        read.csv(here(parent_path, paste('cumulative_food.', latest_file,'.log', sep='')), header = TRUE)
+foodCollection <- read.csv(here(parent_path, paste('food_collection.', latest_file, '.log', sep='')), header = TRUE)
+#cumFood <-        read.csv(here(parent_path, paste('cumulative_food.', latest_file,'.log', sep='')), header = TRUE)
 
 pops <- seq(0:max(popCounts$Bee.Count))
 

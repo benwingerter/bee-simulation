@@ -15,7 +15,7 @@
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 											/>
-				<parameter name="numBees" displayName="Initial Bee Population" type="int" 
+				<parameter name="numBees" displayName="Initial Bee Cohort Count" type="int" 
 						defaultValue="10" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
@@ -25,12 +25,12 @@
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 											/>
-				<parameter name="beeCost" displayName="Cost of New Bee" type="int" 
+				<parameter name="beeCost" displayName="Cost of New Bee Cohort" type="int" 
 						defaultValue="2" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 											/>
-				<parameter name="deathProb" displayName="Bee Death Probability" type="double" 
+				<parameter name="deathProb" displayName="Bee Cohort Death Probability" type="double" 
 						defaultValue="1.0E-4" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
@@ -45,12 +45,12 @@
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 											/>
-				<parameter name="flowerDensity" displayName="Initial Flower Density" type="double" 
+				<parameter name="flowerDensity" displayName="Initial Density of Full Nectaries" type="double" 
 						defaultValue="0.128" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 											/>
-				<parameter name="foodPerFlower" displayName="Food Per Flower" type="int" 
+				<parameter name="foodPerFlower" displayName="Food Per Flower Patch" type="int" 
 						defaultValue="3" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
