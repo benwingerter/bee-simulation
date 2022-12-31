@@ -5,7 +5,7 @@
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 											/>
-				<parameter name="flowerRegenRate" displayName="Flower Regeneration Rate" type="double" 
+				<parameter name="flowerRegenRate" displayName="Nectary Renewal Rate" type="double" 
 						defaultValue="0.01" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
@@ -65,7 +65,7 @@
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 											/>
-				<parameter name="beeRegenRate" displayName="Bee Regeneration Rate" type="double" 
+				<parameter name="beeRegenRate" displayName="Bee Cohort Birth Rate" type="double" 
 						defaultValue="0.01" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"

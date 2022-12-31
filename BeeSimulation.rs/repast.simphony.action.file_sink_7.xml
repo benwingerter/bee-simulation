@@ -9,6 +9,6 @@
     <string>FoodCollected</string>
     <string>tick</string>
   </sourceIds>
-  <fileName>ModelOutput.txt</fileName>
+  <fileName>ModelOutput.csv</fileName>
   <addTimeStamp>true</addTimeStamp>
 </repast.simphony.data2.engine.FileSinkDescriptor>

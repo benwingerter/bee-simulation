@@ -32,6 +32,7 @@ public class Hive {
 	private final double honeyHarvestProb;
 	private final double propHoneyHarvested;
 	private Optional<EventConsumer> userPanel = Optional.empty();
+	private final Parameters params = RunEnvironment.getInstance().getParameters();
 
 	/**
 	 * Create a new hive
@@ -154,5 +155,65 @@ public class Hive {
 		Iterable<Object> objs = grid.getObjects();
 		return StreamSupport.stream(objs.spliterator(), false).filter(Bee.class::isInstance).map(Bee.class::cast)
 				.map(bee -> bee.foundFood()).reduce(0, Integer::sum);
+	}
+
+	public int getRandomSeed() {
+		return params.getInteger(Params.RANDOM_SEED.getValue());
+	}
+
+	public int getSightRadius() {
+		return params.getInteger(Params.SIGHT_RADIUS.getValue());
+	}
+
+	public int getGridWidth() {
+		return params.getInteger(Params.GRID_WIDTH.getValue());
+	}
+
+	public int getGridHeight() {
+		return params.getInteger(Params.GRID_HEIGHT.getValue());
+	}
+
+	public int getNumBees() {
+		return params.getInteger(Params.NUM_BEES.getValue());
+	}
+
+	public double getFlowerDensity() {
+		return params.getDouble(Params.FLOWER_DENSITY.getValue());
+	}
+
+	public int getBeeCost() {
+		return params.getInteger(Params.BEE_COST.getValue());
+	}
+
+	public double getBeeRegenRate() {
+		return params.getDouble(Params.BEE_REGEN_RATE.getValue());
+	}
+
+	public double getFlowerRegenRate() {
+		return params.getDouble(Params.FLOWER_REGEN_RATE.getValue());
+	}
+
+	public int getMaxTicks() {
+		return params.getInteger(Params.MAX_TICKS.getValue());
+	}
+
+	public double getHerbicideDriftProb() {
+		return params.getDouble(Params.HERBICIDE_DRIFT_PROB.getValue());
+	}
+
+	public double getHoneyHarvestProb() {
+		return params.getDouble(Params.HONEY_HARVEST_PROB.getValue());
+	}
+
+	public double getDeathProb() {
+		return params.getDouble(Params.DEATH_PROB.getValue());
+	}
+
+	public int getFoodPerFlower() {
+		return params.getInteger(Params.FOOD_PER_FLOWER.getValue());
+	}
+
+	public double getProportionHoneyHarvested() {
+		return params.getDouble(Params.PROPORTION_HONEY_HARVESTED.getValue());
 	}
 }

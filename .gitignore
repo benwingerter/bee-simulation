@@ -10,6 +10,9 @@ RHome
 bin/
 .temp
 Repast.settings
+*ModelOutput*.csv
+output_2022*/*
+output_2023*/*
 
 # Compiled class file
 *.class
