@@ -13,6 +13,7 @@ Repast.settings
 *ModelOutput*.csv
 output_2022*/*
 output_2023*/*
+*/*.bkp
 
 # Compiled class file
 *.class
