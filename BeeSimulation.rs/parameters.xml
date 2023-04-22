@@ -31,7 +31,7 @@
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 											/>
 				<parameter name="deathProb" displayName="Bee Cohort Death Probability" type="double" 
-						defaultValue="1.0E-4" 
+						defaultValue="5.0E-4" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 											/>
@@ -50,15 +50,15 @@
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 											/>
-				<parameter name="foodPerFlower" displayName="Food Per Flower Patch" type="int" 
-						defaultValue="3" 
-						isReadOnly="false" 
-						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
-											/>
 				<parameter name="proportionHoneyHarvested" displayName="Percentage of Honey Harvested" type="double" 
 						defaultValue="0.9" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
+											/>
+				<parameter name="foodPerFlower" displayName="Food Per Flower Patch" type="int" 
+						defaultValue="3" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 											/>
 				<parameter name="gridWidth" displayName="Grid Width" type="int" 
 						defaultValue="80" 
